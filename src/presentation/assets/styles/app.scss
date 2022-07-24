@@ -1,0 +1,21 @@
+@import 'src/presentation/assets/styles/forms.scss';
+
+.btn-ghost:hover {
+  @apply bg-primary-300 bg-opacity-30;
+}
+
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):focus), .menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul):hover) {
+  @apply bg-primary-300 bg-opacity-30;
+}
+
+.menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul)), .menu :where(li:not(.menu-title):not(:empty)) > :where(*:not(ul)) {
+  @apply rounded-xl text-gray-300 font-medium;
+}
+
+a {
+  @apply hover:text-gray-700;
+}
+
+.table :where(thead, tfoot) :where(th, td) {
+  @apply bg-primary-50;
+}
