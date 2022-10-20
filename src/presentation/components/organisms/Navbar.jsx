@@ -1,9 +1,25 @@
 import React from 'react';
 import config from 'domain/config';
+import service from 'domain/services';
 
-export default function Navbar() {
+export default function Navbar({ setIsLoading }) {
+  const logout = async () => {
+    const response = await service.login.logout(setIsLoading);
+    if (response.message) {
+      sessionStorage.removeItem('loggedUser');
+      window.location.reload();
+      return;
+    }
+
+    alert('error');
+  };
+
   return (
-    <div className='navbar bg-base-100'>
+    <header
+      className='sticky navbar bg-base-100 top-0 z-10 w-full flex'
+      data-dev-hint='mobile menu bar'
+      id='navbar'
+    >
       <div className='flex-none'>
         <label
           htmlFor='sidebar'
@@ -25,7 +41,12 @@ export default function Navbar() {
         </label>
       </div>
       <div className='flex-1'>
-        <a className='cursor-pointer normal-case text-xl font-medium'>
+        <img
+          src={`${config.statics}brand/logo-horizontal.png`}
+          className='cursor-pointer normal-case text-xl font-medium h-12 w-32 block lg:hidden'
+          alt={config.app_name}
+        />
+        <a className='cursor-pointer normal-case text-xl font-medium hidden lg:block'>
           {config.app_name}
         </a>
       </div>
@@ -49,18 +70,27 @@ export default function Navbar() {
             <span className='badge badge-xs badge-primary indicator-item' />
           </div>
         </span>
-        <a
-          href={config.routes.login.path}
-          className='btn btn-ghost btn-circle avatar'
-        >
-          <div className='w-10 rounded-full'>
-            <img
-              alt='profile'
-              src='https://ui-avatars.com/api/?name=Valeria+Granada'
-            />
-          </div>
-        </a>
+        <div className='dropdown dropdown-end'>
+          <label tabIndex='0' className='btn btn-ghost btn-circle avatar'>
+            <div className='w-10 rounded-full'>
+              <img
+                alt='profile'
+                src='https://ui-avatars.com/api/?name=Valeria+Granada'
+              />
+            </div>
+          </label>
+          <ul
+            tabIndex='0'
+            className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52'
+          >
+            <li>
+              <button type='button' onClick={logout}>
+                Cerrar Sesión
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
+    </header>
   );
 }

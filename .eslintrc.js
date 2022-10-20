@@ -28,6 +28,7 @@ module.exports = {
     'arrow-body-style': 'warn',
     'no-nested-ternary': 'warn',
     'react/function-component-definition': 'off',
+    'jsx-a11y/no-noninteractive-tabindex': 'off',
     'prettier/prettier': [
       'error',
       {

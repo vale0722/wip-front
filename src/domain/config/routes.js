@@ -1,12 +1,10 @@
+const grades = require('domain/config/grades');
+
 module.exports = {
   auth: {
     dashboard: {
       path: '/',
       title: 'Inicio',
-    },
-    grades: {
-      path: '/grades',
-      title: 'Grados',
     },
     'my-plans': {
       path: '/my-plans',
@@ -17,6 +15,7 @@ module.exports = {
       title: 'Profesores',
     },
   },
+  grades,
   login: {
     path: '/login',
     title: 'Iniciar Sesión',

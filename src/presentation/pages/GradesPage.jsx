@@ -1,7 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from 'presentation/components/atoms/Header';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEllipsisV, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
+import config from 'domain/config';
+import { useSelector } from 'react-redux';
+import { store } from 'domain/helpers/store';
+import { getGrades } from 'domain/reducers/grade.reducer';
 
-export default function GradesPage() {
+export default function GradesPage({ setIsLoading }) {
+  const getShowRoute = (id) => config.routes.grades.show.path.replace(':grade', id);
+
+  const grades = useSelector((state) => state.grade);
+
+  useEffect(() => {
+    store.dispatch(getGrades(setIsLoading));
+  }, []);
+
   return (
     <div className='flex flex-col h-full w-full items-center'>
       <Header height='h-32' />
@@ -40,27 +55,60 @@ export default function GradesPage() {
           </div>
         </div>
 
-        <div className='overflow-x-auto w-full'>
+        <div className='overflow-x-auto h-full w-full'>
           <table className='table w-full'>
             <thead>
               <tr>
                 <th>Nombre</th>
-                <th>Número de grupos</th>
                 <th>Fecha de creación</th>
                 <th>Fecha de actualización</th>
                 <th> </th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td>
-                  <div className='font-bold'>Primero</div>
-                </td>
-                <td>4</td>
-                <td>2022-01-01</td>
-                <td>2022-01-02</td>
-                <th> : </th>
-              </tr>
+              {grades.length
+                ? grades.map((grade) => (
+                    <tr key={grade.id}>
+                      <td>
+                        <div className='font-bold'>{grade.name}</div>
+                      </td>
+                      <td>{grade.createdAt}</td>
+                      <td>{grade.updatedAt}</td>
+                      <th>
+                        <div className='dropdown dropdown-hover dropdown-left'>
+                          <label
+                            /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+                            tabIndex='0'
+                            className='cursor-pointer hover:bg-primary-200 rounded-full h-5 w-5 text-gray-400 duration-300 transition p-1'
+                          >
+                            <FontAwesomeIcon icon={faEllipsisV} />
+                          </label>
+                          <ul
+                            /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+                            tabIndex='0'
+                            className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10'
+                          >
+                            <li>
+                              <Link
+                                className='flex justify-between w-full'
+                                to={getShowRoute(grade.id)}
+                              >
+                                Ver
+                                <FontAwesomeIcon icon={faEye} />
+                              </Link>
+                            </li>
+                            <li>
+                              <a className='flex justify-between w-full'>
+                                Eliminar
+                                <FontAwesomeIcon icon={faTrash} />
+                              </a>
+                            </li>
+                          </ul>
+                        </div>
+                      </th>
+                    </tr>
+                  ))
+                : ''}
             </tbody>
             <tfoot>
               <tr>

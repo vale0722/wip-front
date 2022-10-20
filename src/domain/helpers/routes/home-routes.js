@@ -3,13 +3,17 @@ import DashboardPage from 'presentation/pages/DashboardPage';
 import Layout from 'presentation/layouts/Layout';
 import { RenderRoutes } from 'domain/helpers/routes';
 import config from 'domain/config';
-import GradesPage from 'presentation/pages/GradesPage';
 import NoFoundPage from 'presentation/pages/NoFoundPage';
+import grades from 'domain/helpers/routes/grade-routes';
 
-function HomeRoutes({ routes }) {
+function HomeRoutes({ routes, setIsLoading, isLoading }) {
   return (
-    <Layout>
-      <RenderRoutes routes={routes} />
+    <Layout setIsLoading={setIsLoading}>
+      <RenderRoutes
+        routes={routes}
+        setIsLoading={setIsLoading}
+        isLoading={isLoading}
+      />
     </Layout>
   );
 }
@@ -17,25 +21,20 @@ function HomeRoutes({ routes }) {
 export default {
   path: '*',
   key: 'home',
+  isAuth: true,
   element: HomeRoutes,
   routes: [
     {
+      isAuth: true,
       path: config.routes.auth.dashboard.path,
       key: 'DASHBOARD',
-      exact: true,
       element: DashboardPage,
     },
     {
-      path: config.routes.auth.grades.path,
-      exact: true,
-      key: 'GRADES',
-      element: GradesPage,
-    },
-    {
+      isAuth: true,
       path: '*',
-      exact: true,
       key: 'NOTFOUND',
       element: NoFoundPage,
     },
-  ],
+  ].concat(grades),
 };
