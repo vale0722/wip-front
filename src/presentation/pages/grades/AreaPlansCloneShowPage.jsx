@@ -10,31 +10,58 @@ import { faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 export default function AreaPlansCloneShowPage({ setIsLoading }) {
   const plan = useSelector((state) => state.areaPlanClone);
-  const [activityForm, setActivityForm] = useState();
   const [activityFormValue, setActivityFormValue] = useState();
+  const [creativeAgent, setCreativeAgent] = useState(
+    plan.id ? plan.creative_agenda.activities : []
+  );
+  const [tasks, setTasks] = useState(plan.id ? plan.tasks : []);
+  const [activities, setActivities] = useState(plan.id ? plan.activities : []);
   const { clone: cloneId } = useParams();
 
   useEffect(() => {
     store.dispatch(getAreaPlanClone(setIsLoading, cloneId));
   }, []);
 
-  const resolveActivity = async (activity) => {
-    await services.areaPlanClone.resolveActivity(setIsLoading, activity);
-    window.location.reload();
+  useEffect(() => {
+    setCreativeAgent(plan.id ? plan.creative_agenda.activities : []);
+    setTasks(plan.id ? plan.tasks : []);
+    setActivities(plan.id ? plan.activities : []);
+  }, [plan]);
+
+  const resolveActivity = async (key) => {
+    const newActivities = [...activities];
+    newActivities[key].done = !newActivities[key].done;
+    setActivities(newActivities);
+    await services.areaPlanClone.resolveActivity(
+      setIsLoading,
+      newActivities[key].id
+    );
   };
 
-  const resolveTask = async (task) => {
-    await services.areaPlanClone.resolveTask(setIsLoading, task);
-    window.location.reload();
+  const resolveTask = async (key) => {
+    const newTasks = [...tasks];
+    newTasks[key].done = !newTasks[key].done;
+    setTasks(newTasks);
+    await services.areaPlanClone.resolveTask(setIsLoading, newTasks[key].id);
   };
 
-  const storeActivityAgent = async (activity) => {
-    await services.areaPlanClone.updateActivityAgent(setIsLoading, activity, {
-      description: activityFormValue,
-    });
-    setActivityForm(null);
-    setActivityFormValue(null);
-    window.location.reload();
+  const updateFieldOnChange = async (key, withValue) => {
+    const newCreativeAgent = [...creativeAgent];
+
+    if (withValue) {
+      newCreativeAgent[key].description = activityFormValue;
+      await services.areaPlanClone.updateActivityAgent(
+        setIsLoading,
+        newCreativeAgent[key].id,
+        {
+          description: newCreativeAgent[key].description,
+        }
+      );
+      setActivityFormValue(null);
+    }
+
+    newCreativeAgent[key].form = !newCreativeAgent[key].form;
+    setCreativeAgent(newCreativeAgent);
   };
 
   return (
@@ -356,49 +383,46 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
                   </h1>
                   <h4 className='text-md text-start'>
                     <ul className='list-disc px-4'>
-                      {plan.id
-                        ? plan.creative_agenda
-                          ? plan.creative_agenda.activities.map((activity) => (
-                              <li className='flex gap-4 items-center justify-between'>
-                                <span>{activity.title}</span>
-                                {activityForm !== activity.id ? (
-                                  <div className='flex gap-4 items-center justify-between'>
-                                    {activity.description}
-                                    <button
-                                      type='button'
-                                      onClick={() =>
-                                        setActivityForm(activity.id)
-                                      }
-                                      className='flex items-center p-2 rounded-full text-sm bg-primary-300 hover:bg-primary-500 text-white shadow-lg'
-                                    >
-                                      <FontAwesomeIcon icon={faPencil} />
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <div className='flex gap-4 items-center justify-between'>
-                                    <input
-                                      onInput={(e) =>
-                                        setActivityFormValue(e.target.value)
-                                      }
-                                      defaultValue={activity.description}
-                                      placeholder='descripción'
-                                      className='block form-input !p-2'
-                                    />
-                                    <button
-                                      type='button'
-                                      onClick={() =>
-                                        storeActivityAgent(activity.id)
-                                      }
-                                      className='flex items-center p-2 rounded-full text-sm bg-primary-300 hover:bg-primary-500 text-white shadow-lg'
-                                    >
-                                      <FontAwesomeIcon icon={faFloppyDisk} />
-                                    </button>
-                                  </div>
-                                )}
-                              </li>
-                            ))
-                          : 'No se definió una agenda creativa'
-                        : ''}
+                      {creativeAgent.length
+                        ? creativeAgent.map((activity, key) => (
+                            <li className='flex gap-4 items-center justify-between'>
+                              <span>{activity.title}</span>
+                              {!activity.form ? (
+                                <div className='flex gap-4 items-center justify-between'>
+                                  {activity.description}
+                                  <button
+                                    type='button'
+                                    onClick={() => updateFieldOnChange(key)}
+                                    className='flex items-center p-2 rounded-full text-sm bg-primary-300 hover:bg-primary-500 text-white shadow-lg'
+                                  >
+                                    <FontAwesomeIcon icon={faPencil} />
+                                  </button>
+                                </div>
+                              ) : (
+                                <div className='flex gap-4 items-center justify-between'>
+                                  <input
+                                    onInput={(e) => {
+                                      setActivityFormValue(e.target.value);
+                                      return true;
+                                    }}
+                                    defaultValue={activity.description}
+                                    placeholder='descripción'
+                                    className='block form-input !p-2'
+                                  />
+                                  <button
+                                    type='button'
+                                    onClick={() =>
+                                      updateFieldOnChange(key, true)
+                                    }
+                                    className='flex items-center p-2 rounded-full text-sm bg-primary-300 hover:bg-primary-500 text-white shadow-lg'
+                                  >
+                                    <FontAwesomeIcon icon={faFloppyDisk} />
+                                  </button>
+                                </div>
+                              )}
+                            </li>
+                          ))
+                        : 'No se definió una agenda creativa'}
                     </ul>
                   </h4>
                 </div>
@@ -437,30 +461,28 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
               <h3 className='text-gray-600 text-xl font-semibold mb-4'>
                 Actividades
               </h3>
-              {plan.id
-                ? !plan.activities.length
-                  ? ''
-                  : plan.activities.map((activity) => (
-                      <div className='flex justify-between items-center'>
-                        <div className='collapse w-full collapse-arrow text-sm capitalize'>
-                          <input type='checkbox' className='peer' />
-                          <div className='collapse-title text-gray-500 font-medium'>
-                            {activity.title}
-                          </div>
-                          <div className='collapse-content'>
-                            <p>{activity.description}</p>
-                          </div>
+              {activities.length
+                ? activities.map((activity, key) => (
+                    <div className='flex justify-between items-center'>
+                      <div className='collapse w-full collapse-arrow text-sm capitalize'>
+                        <input type='checkbox' className='peer' />
+                        <div className='collapse-title text-gray-500 font-medium'>
+                          {activity.title}
                         </div>
-                        <div className='form-control'>
-                          <input
-                            onChange={() => resolveActivity(activity.id)}
-                            checked={activity.done}
-                            type='checkbox'
-                            className='checkbox checkbox-accent'
-                          />
+                        <div className='collapse-content'>
+                          <p>{activity.description}</p>
                         </div>
                       </div>
-                    ))
+                      <div className='form-control'>
+                        <input
+                          onChange={() => resolveActivity(key)}
+                          checked={activity.done}
+                          type='checkbox'
+                          className='checkbox checkbox-accent'
+                        />
+                      </div>
+                    </div>
+                  ))
                 : ''}
             </div>
             <hr />
@@ -468,30 +490,28 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
               <h3 className='text-gray-600 text-xl font-semibold mb-4'>
                 Tareas
               </h3>
-              {plan.id
-                ? !plan.tasks.length
-                  ? ''
-                  : plan.tasks.map((task) => (
-                      <div className='flex justify-between items-center'>
-                        <div className='collapse w-full collapse-arrow text-sm capitalize'>
-                          <input type='checkbox' className='peer' />
-                          <div className='collapse-title text-gray-500 font-medium'>
-                            {task.title}
-                          </div>
-                          <div className='collapse-content'>
-                            <p>{task.description}</p>
-                          </div>
+              {tasks.length
+                ? tasks.map((task, key) => (
+                    <div className='flex justify-between items-center'>
+                      <div className='collapse w-full collapse-arrow text-sm capitalize'>
+                        <input type='checkbox' className='peer' />
+                        <div className='collapse-title text-gray-500 font-medium'>
+                          {task.title}
                         </div>
-                        <div className='form-control'>
-                          <input
-                            onChange={() => resolveTask(task.id)}
-                            checked={task.done}
-                            type='checkbox'
-                            className='checkbox checkbox-accent'
-                          />
+                        <div className='collapse-content'>
+                          <p>{task.description}</p>
                         </div>
                       </div>
-                    ))
+                      <div className='form-control'>
+                        <input
+                          onChange={() => resolveTask(key)}
+                          checked={task.done}
+                          type='checkbox'
+                          className='checkbox checkbox-accent'
+                        />
+                      </div>
+                    </div>
+                  ))
                 : ''}
             </div>
             <hr />

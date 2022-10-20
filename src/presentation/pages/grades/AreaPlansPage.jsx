@@ -40,12 +40,7 @@ export default function AreaPlansPage({ setIsLoading }) {
       <Header height='h-32' />
       <div className='container flex flex-col h-full w-full my-4'>
         <div className='flex gap-3 text-sm'>
-          <Link
-            to={`${config.routes.grades.show.path.replace(
-              ':grade',
-              areaActive.id ? areaActive.grade.id : ''
-            )}`}
-          >
+          <Link to={config.routes.grades.show.path.replace(':grade', gradeId)}>
             {areaActive.id ? areaActive.grade.name : ''}
           </Link>
           <span>
@@ -53,10 +48,7 @@ export default function AreaPlansPage({ setIsLoading }) {
           </span>
           <Link
             to={`${
-              config.routes.grades.show.path.replace(
-                ':grade',
-                areaActive.grade
-              ) +
+              config.routes.grades.show.path.replace(':grade', gradeId) +
               config.routes.grades.areas.show.path.replace(
                 ':area',
                 areaActive.id
@@ -70,14 +62,8 @@ export default function AreaPlansPage({ setIsLoading }) {
           </span>
           <Link
             to={`${
-              config.routes.grades.show.path.replace(
-                ':grade',
-                areaActive.grade
-              ) +
-              config.routes.grades.areas.plans.path.replace(
-                ':area',
-                areaActive.code
-              )
+              config.routes.grades.show.path.replace(':grade', gradeId) +
+              config.routes.grades.areas.plans.path.replace(':area', areaId)
             }`}
             className='font-semibold'
           >

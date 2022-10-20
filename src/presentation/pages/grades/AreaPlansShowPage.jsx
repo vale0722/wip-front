@@ -32,10 +32,8 @@ export default function AreaPlansShowPage({ setIsLoading }) {
     <div className='flex flex-col h-full w-full'>
       <Header height='h-full' />
       <div className='flex gap-3 text-sm capitalize m-10 mb-0'>
-        <Link
-          to={`${config.routes.grades.show.path.replace(':grade', gradeId)}`}
-        >
-          {plan.id ? plan.area.grade.name : ''}
+        <Link to={config.routes.grades.show.path.replace(':grade', gradeId)}>
+          {gradeId}
         </Link>
         <span>
           <FontAwesomeIcon icon={faAngleRight} />

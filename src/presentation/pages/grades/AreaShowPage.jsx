@@ -11,7 +11,7 @@ import { getArea } from 'domain/reducers/area.reducer';
 export default function AreaShowPage({ setIsLoading }) {
   const areaActive = useSelector((state) => state.area);
 
-  const { area: areaId } = useParams();
+  const { area: areaId, grade: gradeId } = useParams();
   useEffect(() => {
     store.dispatch(getArea(setIsLoading, areaId));
   }, []);
@@ -69,11 +69,7 @@ export default function AreaShowPage({ setIsLoading }) {
         <article className='col-span-4 mx-10 gap-3'>
           <div className='flex gap-3 text-sm capitalize'>
             <Link
-              to={`
-              ${config.routes.grades.show.path.replace(
-                ':grade',
-                areaActive.id ? areaActive.grade.id : ''
-              )}`}
+              to={config.routes.grades.show.path.replace(':grade', gradeId)}
             >
               {areaActive.id ? areaActive.grade.name : ''}
             </Link>
@@ -81,8 +77,10 @@ export default function AreaShowPage({ setIsLoading }) {
               <FontAwesomeIcon icon={faAngleRight} />
             </span>
             <Link
-              to={`
-              ${config.routes.grades.areas.show.path.replace(
+              to={`${config.routes.grades.show.path.replace(
+                ':grade',
+                gradeId
+              )}${config.routes.grades.areas.show.path.replace(
                 ':area',
                 areaActive.id
               )}`}
