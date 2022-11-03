@@ -573,7 +573,7 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
             <hr />
             <div className='flex flex-col'>
               <h3 className='text-gray-600 text-xl font-semibold mb-4'>
-                Orientaciones
+                Orientaciones para el docente
               </h3>
               <ul className='list-disc px-4'>
                 {plan.id

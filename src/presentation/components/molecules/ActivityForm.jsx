@@ -36,7 +36,7 @@ export default function ActivityForm({ addItem }) {
             onInput={(event) => {
               selected.description = event.target.value;
             }}
-            placeholder='Ingrese las semanas'
+            placeholder='Ingrese una descripción'
             className='block form-input !p-2'
           />
         </div>

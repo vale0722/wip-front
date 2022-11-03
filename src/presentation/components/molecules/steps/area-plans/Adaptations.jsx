@@ -1,7 +1,6 @@
 import React from 'react';
 import TodoList from 'presentation/components/molecules/TodoList';
 import { useSelector } from 'react-redux';
-import Task from 'presentation/components/molecules/Task';
 
 export default function Adaptations() {
   const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm);
@@ -16,7 +15,9 @@ export default function Adaptations() {
       </div>
       <div className='grid grid-cols-1 gap-4'>
         <div className='flex flex-col gap-4'>
-          <span className='text-md font-semibold'>Orientaciones</span>
+          <span className='text-md font-semibold'>
+            Orientaciones para el docente
+          </span>
           <TodoList
             defaultValue={areaPlanDataForm.orientations}
             onChange={(items) => {
@@ -33,17 +34,6 @@ export default function Adaptations() {
               areaPlanDataForm.adaptations = items;
             }}
             placeholder='Escriba una adaptación'
-          />
-        </div>
-        <div className='flex flex-col gap-4'>
-          <span className='text-md font-semibold'>Agenda Creativa</span>
-          <TodoList
-            defaultValue={areaPlanDataForm.activiesPlanCreative}
-            inputComponent={Task}
-            onChange={(items) => {
-              areaPlanDataForm.activiesPlanCreative = items;
-            }}
-            placeholder='Escriba una actividad'
           />
         </div>
       </div>

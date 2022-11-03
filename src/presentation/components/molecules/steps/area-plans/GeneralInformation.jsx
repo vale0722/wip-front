@@ -42,11 +42,13 @@ export default function GeneralInformation() {
     <div className='flex flex-col h-full w-full gap-2'>
       <div className='flex flex-col gap-2 mb-6'>
         <span className='text-xl font-semibold'>Información general</span>
-        <span className='text-sm text-gray-300'>¿Qué y Cuando?</span>
+        <span className='text-sm text-gray-300'>
+          Ingresa la información general del plan de area a crear
+        </span>
       </div>
       <div className='grid grid-cols-2 gap-4'>
         <div className='flex flex-col gap-2'>
-          <label className='text-xs font-bold'>Nombre</label>
+          <label className='text-md font-bold'>Nombre</label>
           <input
             defaultValue={areaPlanDataForm.name}
             onInput={setName}
@@ -56,7 +58,7 @@ export default function GeneralInformation() {
           />
         </div>
         <div className='flex flex-col gap-2'>
-          <label className='text-xs font-bold'>Semanas</label>
+          <label className='text-md font-bold'>Semanas</label>
           <input
             defaultValue={areaPlanDataForm.week}
             type='text'
@@ -66,7 +68,7 @@ export default function GeneralInformation() {
           />
         </div>
         <div className='flex flex-col gap-2 col-span-2'>
-          <label className='text-xs font-bold'>Rango de fechas</label>
+          <label className='text-md font-bold'>Rango de fechas</label>
           <div className='dropdown dropdown-end'>
             <label
               /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
@@ -75,7 +77,7 @@ export default function GeneralInformation() {
               <input
                 type='text'
                 value={dateFormat}
-                placeholder='Ingrese las semanas'
+                placeholder='Ingrese el rango de fechas'
                 onChange={() => {}}
                 disabled
                 className='block form-input !p-2'

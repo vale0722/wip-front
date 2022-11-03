@@ -16,10 +16,23 @@ export default function Content() {
       <div className='flex flex-col gap-2 mb-6'>
         <span className='text-xl font-semibold'>Contenido</span>
         <span className='text-sm text-gray-300'>
-          ¿Que haremos en la planeación?
+          Describe las tareas, anexos, temas y referencias que estarán incluidos
+          en la planeación
         </span>
       </div>
       <div className='grid grid-cols-1 gap-4'>
+        <div className='flex flex-col gap-4'>
+          <span className='text-md font-semibold'>Agenda Creativa</span>
+          <TodoList
+            defaultValue={areaPlanDataForm.activiesPlanCreative}
+            inputComponent={Task}
+            onChange={(items) => {
+              areaPlanDataForm.activiesPlanCreative = items;
+            }}
+            placeholder='Escriba una actividad'
+          />
+        </div>
+        <hr />
         <div className='flex flex-col gap-4'>
           <span className='text-md font-semibold'>Temas/Ejes/Contenidos</span>
           <TodoList
@@ -31,6 +44,27 @@ export default function Content() {
             options={areaTopics}
           />
         </div>
+        <hr />
+        <div className='flex flex-col gap-2'>
+          <label className='text-md font-bold'>Pregunta problematizadora</label>
+          <textarea
+            defaultValue={areaPlanDataForm.question}
+            onInput={(event) => {
+              areaPlanDataForm.question = event.target.value;
+            }}
+            placeholder='Ingrese la pregunta problematizadora'
+            className='block form-input !p-2'
+          />
+        </div>
+        <hr />
+        <TodoListModal
+          defaultValue={areaPlanDataForm.activities}
+          onChange={(items) => {
+            areaPlanDataForm.activities = items;
+          }}
+          modalComponent={ActivityForm}
+          title='Actividades Generales'
+        />
         <hr />
         <div className='flex flex-col gap-4'>
           <span className='text-md font-semibold'>Tareas</span>
@@ -67,15 +101,6 @@ export default function Content() {
             placeholder='Seleccione un tema'
           />
         </div>
-        <hr />
-        <TodoListModal
-          defaultValue={areaPlanDataForm.activities}
-          onChange={(items) => {
-            areaPlanDataForm.activities = items;
-          }}
-          modalComponent={ActivityForm}
-          title='Actividades Generales'
-        />
       </div>
     </div>
   );

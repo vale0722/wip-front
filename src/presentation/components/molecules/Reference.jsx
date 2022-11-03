@@ -9,7 +9,7 @@ export default function Reference({ setSelected, clear }) {
   return (
     <div className='flex gap-4 w-full'>
       <div className='flex flex-col gap-2'>
-        <label className='text-xs font-bold'>Titulo</label>
+        <label className='text-xs font-bold'>Título</label>
         <input
           onInput={(event) => {
             reference.title = event.target.value;

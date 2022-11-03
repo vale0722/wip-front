@@ -18,18 +18,7 @@ export default function Objetives() {
       </div>
       <div className='grid grid-cols-1 gap-4'>
         <div className='flex flex-col gap-2'>
-          <label className='text-xs font-bold'>Pregunta problematizadora</label>
-          <textarea
-            defaultValue={areaPlanDataForm.question}
-            onInput={(event) => {
-              areaPlanDataForm.question = event.target.value;
-            }}
-            placeholder='Ingrese la pregunta problematizadora'
-            className='block form-input !p-2'
-          />
-        </div>
-        <div className='flex flex-col gap-2'>
-          <label className='text-xs font-bold'>Competencias</label>
+          <label className='text-md font-bold'>Competencias</label>
           <TodoList
             placeholder='Seleccione las competencias'
             defaultValue={areaPlanDataForm.performance_competences}

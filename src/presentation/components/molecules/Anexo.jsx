@@ -60,7 +60,7 @@ export default function Anexo({ setSelected }) {
         </select>
       </div>
       <div className='flex flex-col gap-2'>
-        <label className='text-xs font-bold'>Titulo</label>
+        <label className='text-xs font-bold'>Título</label>
         <input
           onInput={(event) => {
             anexo.title = event.target.value;

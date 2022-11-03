@@ -14,7 +14,7 @@ export default function AreaPlanForm({ setIsLoading }) {
   const steps = [
     {
       name: 'Información general',
-      description: '¿Qué y Cuando?',
+      description: 'Ingresa la información general del plan de area a crear',
       component: GeneralInformation,
     },
     {
@@ -24,7 +24,8 @@ export default function AreaPlanForm({ setIsLoading }) {
     },
     {
       name: 'Contenido',
-      description: '¿Que haremos en la planeación?',
+      description:
+        'Describe las tareas, anexos, temas y referencias que estarán incluidos en la planeación',
       component: Content,
     },
     {
