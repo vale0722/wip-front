@@ -1,0 +1,12 @@
+.btn-primary {
+  @apply text-xl text-white bg-primary-300 rounded-2xl hover:scale-105 hover:text-white hover:bg-primary-500 transition duration-500
+}
+
+.card {
+  @apply py-12 px-12 bg-white rounded-2xl shadow-xl
+}
+
+.form-input {
+  @apply  text-sm py-3 px-4 rounded-lg w-full border;
+  @apply  outline-none hover:outline-offset-0 hover:outline hover:outline-1 hover:outline-gray-200 transition duration-300;
+}
