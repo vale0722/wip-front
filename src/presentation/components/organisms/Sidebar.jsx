@@ -29,7 +29,7 @@ export default function Sidebar({ setIsLoading }) {
   }
 
   return (
-    <div className='drawer-side'>
+    <div className='drawer-side shadow'>
       <label htmlFor='sidebar' className='drawer-overlay' />
       <ul className='menu px-4 py-10 overflow-y-auto w-80 md:w-64 bg-base-100 text-base-content shadow-lg rounded-2xl'>
         <a

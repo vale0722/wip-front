@@ -5,6 +5,7 @@ import { RenderRoutes } from 'domain/helpers/routes';
 import config from 'domain/config';
 import NoFoundPage from 'presentation/pages/NoFoundPage';
 import grades from 'domain/helpers/routes/grade-routes';
+import teachers from 'domain/helpers/routes/teacher-routes';
 
 function HomeRoutes({ routes, setIsLoading, isLoading }) {
   return (
@@ -36,5 +37,7 @@ export default {
       key: 'NOTFOUND',
       element: NoFoundPage,
     },
-  ].concat(grades),
+  ]
+    .concat(grades)
+    .concat(teachers),
 };

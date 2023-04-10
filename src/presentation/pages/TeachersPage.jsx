@@ -6,22 +6,25 @@ import { Link } from 'react-router-dom';
 import config from 'domain/config';
 import { useSelector } from 'react-redux';
 import { store } from 'domain/helpers/store';
-import { getGrades } from 'domain/reducers/grade.reducer';
+import { getTeachers } from 'domain/reducers/teacher.reducer';
 
-export default function GradesPage({ setIsLoading }) {
-  const getShowRoute = (id) => config.routes.grades.show.path.replace(':grade', id);
+export default function Teachers({ setIsLoading }) {
+  const getShowRoute = (id) =>
+    config.routes.teachers.show.path.replace(':teacher', id);
 
-  const grades = useSelector((state) => state.grade);
+  const teachers = useSelector((state) => state.teachers);
+
+  const getCreateRoute = () => config.routes.teachers.store.path;
 
   useEffect(() => {
-    store.dispatch(getGrades(setIsLoading));
+    store.dispatch(getTeachers(setIsLoading));
   }, []);
 
   return (
     <div className='flex flex-col h-full w-full items-center'>
       <Header height='h-32' />
       <div className='container flex flex-col h-full w-full my-4'>
-        <span className='text-2xl font-semibold py-6'>Grados</span>
+        <span className='text-2xl font-semibold py-6'>Profesores</span>
         <div className='mb-4 flex justify-between items-center'>
           <div className='flex-1 pr-4'>
             <div className='relative md:w-1/3'>
@@ -49,9 +52,12 @@ export default function GradesPage({ setIsLoading }) {
             </div>
           </div>
           <div>
-            <span className='btn btn-primary px-4 py-2 !text-sm'>
-              Crear Grado
-            </span>
+            <Link
+              className='btn btn-primary px-4 py-2 !text-sm'
+              to={getCreateRoute()}
+            >
+              Registra un profesor
+            </Link>
           </div>
         </div>
 
@@ -60,20 +66,22 @@ export default function GradesPage({ setIsLoading }) {
             <thead>
               <tr>
                 <th>Nombre</th>
+                <th>Grado</th>
                 <th>Fecha de creación</th>
                 <th>Fecha de actualización</th>
                 <th> </th>
               </tr>
             </thead>
             <tbody>
-              {grades.length
-                ? grades.map((grade) => (
-                    <tr key={grade.id}>
+              {teachers.length
+                ? teachers.map((teacher) => (
+                    <tr key={teacher.id}>
                       <td>
-                        <div className='font-bold'>{grade.name}</div>
+                        <div className='font-bold'>{teacher.name}</div>
                       </td>
-                      <td>{grade.createdAt}</td>
-                      <td>{grade.updatedAt}</td>
+                      <td>{teacher.grade}</td>
+                      <td>{teacher.createdAt}</td>
+                      <td>{teacher.updatedAt}</td>
                       <th>
                         <div className='dropdown dropdown-hover dropdown-left'>
                           <label
@@ -91,7 +99,7 @@ export default function GradesPage({ setIsLoading }) {
                             <li>
                               <Link
                                 className='flex justify-between w-full'
-                                to={getShowRoute(grade.id)}
+                                to={getShowRoute(teacher.id)}
                               >
                                 Ver
                                 <FontAwesomeIcon icon={faEye} />

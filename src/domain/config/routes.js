@@ -1,4 +1,5 @@
 const grades = require('domain/config/grades');
+const teachers = require('domain/config/teachers');
 
 module.exports = {
   auth: {
@@ -16,6 +17,7 @@ module.exports = {
     },
   },
   grades,
+  teachers,
   login: {
     path: '/login',
     title: 'Iniciar Sesión',

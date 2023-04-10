@@ -16,7 +16,7 @@ export default function Navbar({ setIsLoading }) {
 
   return (
     <header
-      className='sticky navbar bg-base-100 top-0 z-10 w-full flex'
+      className='sticky navbar bg-base-100 top-0 z-10 w-full flex shadow'
       data-dev-hint='mobile menu bar'
       id='navbar'
     >
