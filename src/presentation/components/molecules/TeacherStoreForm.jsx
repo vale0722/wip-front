@@ -1,12 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import services from 'domain/services';
+import config from 'domain/config';
+import { store } from 'domain/helpers/store';
+import { getGroups } from 'domain/reducers/group.reducer';
 
 export default function TeacherStoreForm({ setIsLoading }) {
-  const grades = useSelector((state) => state.grades);
+  const groups = useSelector((state) => state.groups);
+  const [data] = useState({
+    name: '',
+    lastname: '',
+    email: '',
+    password: '',
+    grade: '',
+    group: '',
+  });
   const submitForm = async () => {
     setIsLoading(true);
-    alert('aca envio');
+    const response = await services.teachers.store(setIsLoading, {
+      name: `${data.name} ${data.lastname}`,
+      email: data.email,
+      password: data.password,
+      group_id: data.group,
+    });
+    if (response) {
+      window.location.href = config.routes.teachers.show.path.replace(
+        ':teacher',
+        response.id
+      );
+      return;
+    }
+
+    alert('error');
   };
+
+  useEffect(() => {
+    store.dispatch(getGroups(setIsLoading));
+  }, []);
 
   return (
     <div className='flex flex-col gap-6 py-10'>
@@ -24,6 +54,9 @@ export default function TeacherStoreForm({ setIsLoading }) {
                 <label className='text-md font-bold'>Nombre</label>
                 <input
                   type='text'
+                  onInput={(event) => {
+                    data.name = event.target.value;
+                  }}
                   placeholder='Ingrese un nombre'
                   className='block form-input !p-2'
                 />
@@ -32,6 +65,9 @@ export default function TeacherStoreForm({ setIsLoading }) {
                 <label className='text-md font-bold'>Apellído</label>
                 <input
                   type='text'
+                  onInput={(event) => {
+                    data.lastname = event.target.value;
+                  }}
                   placeholder='Ingrese su apellído'
                   className='block form-input !p-2'
                 />
@@ -39,25 +75,45 @@ export default function TeacherStoreForm({ setIsLoading }) {
               <div className='flex flex-col gap-2'>
                 <label className='text-md font-bold'>Correo Electrónico</label>
                 <input
+                  onInput={(event) => {
+                    data.email = event.target.value;
+                  }}
                   type='text'
                   placeholder='Ingrese un correo'
                   className='block form-input !p-2'
                 />
               </div>
               <div className='flex flex-col gap-2'>
-                <label className='text-md font-bold'>Grado</label>
-                <select className='block form-input !p-2'>
+                <label className='text-md font-bold'>Contraseña</label>
+                <input
+                  onInput={(event) => {
+                    data.password = event.target.value;
+                  }}
+                  type='password'
+                  placeholder='Ingrese una contraseña'
+                  className='block form-input !p-2'
+                />
+              </div>
+              <div className='flex flex-col gap-2'>
+                <label className='text-md font-bold'>Grupos</label>
+                <select
+                  defaultValue='default'
+                  onInput={(event) => {
+                    data.group = event.target.value;
+                  }}
+                  className='block form-input !p-2'
+                >
                   <option value='default' disabled>
-                    selecciona un tipo
+                    Selecciona un grupo
                   </option>
-                  {grades.length
-                    ? grades.map((grade) => (
+                  {groups.length
+                    ? groups.map((group) => (
                         <option
-                          key={grade.id}
-                          value={grade.id}
+                          key={group.id}
+                          value={group.id}
                           className='capitalize'
                         >
-                          {grade.name}
+                          {group.name}
                         </option>
                       ))
                     : ''}

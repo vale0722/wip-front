@@ -8,6 +8,7 @@ import {
 import { areaPlanClone } from 'domain/reducers/area_plan_clone.reducer';
 import { grade, grades } from 'domain/reducers/grade.reducer';
 import { teacher, teachers } from 'domain/reducers/teacher.reducer';
+import { groups } from 'domain/reducers/group.reducer';
 import { area } from 'domain/reducers/area.reducer';
 import { combineReducers } from 'redux';
 
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   grades,
   teachers,
   teacher,
+  groups,
 });
 
 export default rootReducer;

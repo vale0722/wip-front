@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from 'presentation/components/atoms/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -7,14 +7,30 @@ import config from 'domain/config';
 import { useSelector } from 'react-redux';
 import { store } from 'domain/helpers/store';
 import { getTeachers } from 'domain/reducers/teacher.reducer';
+import services from 'domain/services';
 
 export default function Teachers({ setIsLoading }) {
   const getShowRoute = (id) =>
     config.routes.teachers.show.path.replace(':teacher', id);
 
   const teachers = useSelector((state) => state.teachers);
+  const [alertItem, setAlertItem] = useState(false);
 
   const getCreateRoute = () => config.routes.teachers.store.path;
+  const deleteTeacher = async (id) => {
+    setIsLoading(true);
+    const response = await services.teachers.remove(setIsLoading, id);
+    if (response.status === 'OK') {
+      setAlertItem(true);
+      store.dispatch(getTeachers(setIsLoading));
+      setTimeout(() => {
+        setAlertItem(false);
+      }, 5000);
+      return;
+    }
+
+    alert('ha ocurrido un error');
+  };
 
   useEffect(() => {
     store.dispatch(getTeachers(setIsLoading));
@@ -24,6 +40,30 @@ export default function Teachers({ setIsLoading }) {
     <div className='flex flex-col h-full w-full items-center'>
       <Header height='h-32' />
       <div className='container flex flex-col h-full w-full my-4'>
+        {alertItem ? (
+          <div
+            className='bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md'
+            role='alert'
+          >
+            <div className='flex'>
+              <div className='py-1'>
+                <svg
+                  className='fill-current h-6 w-6 text-teal-500 mr-4'
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 20 20'
+                >
+                  <path d='M2.93 17.07A10 10 0 1 1 17.07 2.93 10 10 0 0 1 2.93 17.07zm12.73-1.41A8 8 0 1 0 4.34 4.34a8 8 0 0 0 11.32 11.32zM9 11V9h2v6H9v-4zm0-6h2v2H9V5z' />
+                </svg>
+              </div>
+              <div>
+                <p className='font-bold'>Accíon realizada con exito</p>
+                <p className='text-sm'>Registro eliminado exitosamente</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          ''
+        )}
         <span className='text-2xl font-semibold py-6'>Profesores</span>
         <div className='mb-4 flex justify-between items-center'>
           <div className='flex-1 pr-4'>
@@ -79,7 +119,7 @@ export default function Teachers({ setIsLoading }) {
                       <td>
                         <div className='font-bold'>{teacher.name}</div>
                       </td>
-                      <td>{teacher.grade}</td>
+                      <td>{teacher.group_name}</td>
                       <td>{teacher.createdAt}</td>
                       <td>{teacher.updatedAt}</td>
                       <th>
@@ -106,10 +146,14 @@ export default function Teachers({ setIsLoading }) {
                               </Link>
                             </li>
                             <li>
-                              <a className='flex justify-between w-full'>
+                              <button
+                                type='button'
+                                className='flex justify-between w-full'
+                                onClick={() => deleteTeacher(teacher.id)}
+                              >
                                 Eliminar
                                 <FontAwesomeIcon icon={faTrash} />
-                              </a>
+                              </button>
                             </li>
                           </ul>
                         </div>
