@@ -2,46 +2,35 @@ import React, { useEffect } from 'react';
 import Header from 'presentation/components/atoms/Header';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
-import { useSelector } from 'react-redux';
-import { store } from 'domain/helpers/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { getGrade } from 'domain/reducers/grade.reducer';
-
-const teachers = [
-  {
-    id: 1,
-    name: 'Martica',
-  },
-  {
-    id: 2,
-    name: 'Clarita',
-  },
-  {
-    id: 3,
-    name: 'Laura',
-  },
-  {
-    id: 4,
-    name: 'Luz',
-  },
-];
+import services from 'domain/services';
+import AreaForm from 'presentation/components/molecules/AreaForm';
+import { getSubjects } from 'domain/reducers/subjects.reducer';
 
 export default function GradesShowPage({ setIsLoading, isLoading }) {
-  const gradeActive = useSelector((state) => state.grade);
+  const gradeActive = useSelector((state) => state.grade.value);
   const getShowRoute = (id) =>
     config.routes.grades.show.path.replace(':grade', gradeActive.id) +
     config.routes.grades.areas.show.path.replace(':area', id);
 
   const { grade: gradeId } = useParams();
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    store.dispatch(getGrade(setIsLoading, gradeId));
+    services.grades.show(setIsLoading, gradeId).then((data) => {
+      dispatch(getGrade(data));
+    });
+
+    services.subjects.index(setIsLoading, gradeId).then((data) => {
+      dispatch(getSubjects(data));
+    });
   }, [gradeId]);
 
-  return !isLoading ? (
-    <div className='flex flex-col h-full w-full items-center my-10'>
-      <div className='w-full fixed h-full -z-10'>
-        <Header height='h-full' />
-      </div>
-      <main className='py-2 bg-white bg-opacity-30 grid grid-cols-1 lg:grid-cols-6 gap-6 my-12 w-3xl px-2 mx-auto'>
+  return !isLoading && gradeActive.id ? (
+    <div className='flex flex-col h-full items-center m-8'>
+      <Header height='h-full' />
+      <main className='bg-white bg-opacity-30 grid grid-cols-1 lg:grid-cols-6 gap-6 my-8 w-3xl px-2 mx-auto'>
         <aside className='col-span-2 flex flex-col gap-6'>
           <div className='bg-white shadow rounded-lg p-10'>
             <div className='flex flex-col gap-1 text-center items-center'>
@@ -56,19 +45,28 @@ export default function GradesShowPage({ setIsLoading, isLoading }) {
               Profesores
             </h3>
             <ul className='bg-white shadow mt-3  rounded-lg p-6 flex items-center justify-between space-x-2'>
-              {teachers.map((teacher) => (
+              {gradeActive.teachers.map((teacher) => (
                 <li
                   key={teacher.id}
                   className='flex flex-col items-center space-y-2 tooltip tooltip-primary transition ease-in duration-200 hover:scale-105'
                   data-tip={teacher.name}
                 >
-                  <a className='block bg-white p-1 rounded-full' href='#'>
+                  <Link
+                    className='block bg-white p-1 rounded-full'
+                    to={config.routes.teachers.show.path.replace(
+                      ':teacher',
+                      teacher.id
+                    )}
+                  >
                     <img
-                      className='w-16 rounded-full'
-                      src={`https://source.unsplash.com/random/200x200?sig=${teacher.id}`}
-                      alt={teacher.name}
+                      alt='profile'
+                      className='rounded-full'
+                      src={`https://ui-avatars.com/api/?name=${teacher.name.replace(
+                        ' ',
+                        '+'
+                      )}`}
                     />
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -135,7 +133,31 @@ export default function GradesShowPage({ setIsLoading, isLoading }) {
                   </li>
                 ))
               : ''}
+
+            <li
+              data-tip='Crear área integrada'
+              className='flex flex-col items-center space-y-2 tooltip tooltip-primary transition ease-in duration-200 hover:scale-105'
+            >
+              <label
+                htmlFor='areaClone'
+                className='w-32 h-32 block bg-white p-1 rounded-full'
+              >
+                <div className='w-32 h-32 rounded-full bg-primary-300 fill-white flex items-center justify-center'>
+                  <svg
+                    className='w-10 h-10'
+                    xmlns='http://www.w3.org/2000/svg'
+                    viewBox='0 0 448 512'
+                  >
+                    <path d='M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z' />
+                  </svg>
+                </div>
+              </label>
+              <h4 className='text-gray-700 text-sm font-semibold'>
+                Crear una nueva área integrada
+              </h4>
+            </li>
           </div>
+          <AreaForm setIsLoading={setIsLoading} isLoading={isLoading} />
         </article>
       </main>
     </div>

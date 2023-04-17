@@ -4,17 +4,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faEye } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { store } from 'domain/helpers/store';
 import { getArea } from 'domain/reducers/area.reducer';
+import services from 'domain/services';
 
 export default function AreaShowPage({ setIsLoading }) {
-  const areaActive = useSelector((state) => state.area);
+  const areaActive = useSelector((state) => state.area.value);
 
   const { area: areaId, grade: gradeId } = useParams();
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(getArea(setIsLoading, areaId));
-  }, []);
+    services.area
+      .show(setIsLoading, areaId)
+      .then((data) => dispatch(getArea(data)));
+  }, [dispatch]);
 
   return (
     <div className='flex flex-col h-full w-full items-center my-10'>

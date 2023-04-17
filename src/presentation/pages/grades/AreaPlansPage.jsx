@@ -9,21 +9,26 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
-import { useSelector } from 'react-redux';
-import { store } from 'domain/helpers/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAreaPlans } from 'domain/reducers/area_plan.reducer';
 import { getArea } from 'domain/reducers/area.reducer';
+import services from 'domain/services';
 
 export default function AreaPlansPage({ setIsLoading }) {
-  const areaActive = useSelector((state) => state.area);
-  const plans = useSelector((state) => state.areaPlan);
+  const areaActive = useSelector((state) => state.area.value);
+  const plans = useSelector((state) => state.areaPlans.value);
 
   const { area: areaId, grade: gradeId } = useParams();
 
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(getArea(setIsLoading, areaId));
-    store.dispatch(getAreaPlans(setIsLoading, gradeId, areaId));
-  }, []);
+    services.area
+      .show(setIsLoading, areaId)
+      .then((data) => dispatch(getArea(data)));
+    services.areaPlan
+      .index(setIsLoading, gradeId, areaId)
+      .then((data) => dispatch(getAreaPlans(data)));
+  }, [dispatch]);
 
   const getShowRoute = (id) =>
     config.routes.grades.show.path.replace(':grade', gradeId) +

@@ -1,22 +1,17 @@
-import services from 'domain/services';
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {};
+export const areaSlice = createSlice({
+  name: 'area',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getArea: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload.data && payload.data.length ? payload.data : [];
+    },
+  },
+});
 
-export function getArea(setIsLoading, areaId) {
-  return async function action(dispatch) {
-    const data = await services.area.show(setIsLoading, areaId);
-    dispatch({
-      type: 'area',
-      payload: data.data ?? initialState,
-    });
-  };
-}
-
-export function area(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'area':
-      return action.payload;
-    default:
-      return state;
-  }
-}
+export const { getArea } = areaSlice.actions;
+export const area = areaSlice.reducer;

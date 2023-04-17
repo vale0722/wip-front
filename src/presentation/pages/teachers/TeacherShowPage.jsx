@@ -1,20 +1,35 @@
 import React, { useEffect } from 'react';
 import Header from 'presentation/components/atoms/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
+import {
+  faAngleRight,
+  faEllipsisV,
+  faEye,
+  faTrash,
+} from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
-import { useSelector } from 'react-redux';
-import { store } from 'domain/helpers/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { getTeacher } from 'domain/reducers/teacher.reducer';
+import services from 'domain/services';
 
 export default function TeacherShowPage({ setIsLoading }) {
-  const teacher = useSelector((state) => state.teacher);
+  const teacher = useSelector((state) => state.teacher.value);
   const { teacher: teacherId } = useParams();
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(getTeacher(setIsLoading, teacherId));
-  }, []);
-console.log(teacher.plans);
+    services.teachers
+      .show(setIsLoading, teacherId)
+      .then((data) => dispatch(getTeacher(data)));
+  }, [dispatch]);
+
+  const getShowCloneRoute = (clone) =>
+    config.routes.grades.show.path.replace(':grade', teacher.grade_id) +
+    config.routes.grades.areas.plans.routes.clones.routes.show.path
+      .replace(':area', clone.area.id)
+      .replace(':plan', clone.parent.id)
+      .replace(':clone', clone.id);
+
   return (
     <div className='flex flex-col h-full w-full'>
       <Header height='h-full' />
@@ -78,32 +93,77 @@ console.log(teacher.plans);
               </ul>
             </div>
           </aside>
-          <div className='flex flex-col gap-4 w-full col-span-full lg:col-span-4'>
+          <div className='flex flex-col gap-4 w-full col-span-full lg:col-span-4 relative'>
             <div>
               <h3 className='text-gray-600 text-xl font-semibold mb-4'>
                 Seguimientos
               </h3>
-              <ul className='bg-white shadow mt-3  rounded-lg p-6 flex flex-co items-center justify-between space-x-2'>
-                {teacher.id
-                  ? teacher.plans.length
-                    ? teacher.plans.map((son) => (
-                        <li
-                          key={son.id}
-                          className='flex flex-col items-center space-y-2 w-12 h-12'
-                          data-tip={son.id}
-                        >
-                          <Link
-                            title={son.id}
-                            className='block text-primary-500 hover:text-primary-500 transition ease-in duration-200 hover:scale-105 font-bold h-full w-full flex items-center justify-center rounded-full'
-                            to='/'
-                          >
-                            {son.area_plan.name}
-                          </Link>
-                        </li>
-                      ))
-                    : 'No se han creado seguimientos'
-                  : ''}
-              </ul>
+              <div className='h-full w-full'>
+                <table className='table w-full'>
+                  <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Fecha de creación</th>
+                      <th>Fecha de actualización</th>
+                      <th> </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {teacher.id && teacher.plans.length
+                      ? teacher.plans.map((son) => (
+                          <tr key={son.id}>
+                            <td>
+                              <Link
+                                title={son.id}
+                                className='block font-bold transition ease-in duration-200 hover:scale-105 h-full w-full cursor-pointer'
+                                to={getShowCloneRoute(son)}
+                              >
+                                {son.name}
+                              </Link>
+                            </td>
+                            <td>{son.createdAt}</td>
+                            <td>{son.updatedAt}</td>
+                            <td>
+                              <div className='dropdown dropdown-hover dropdown-left'>
+                                <label
+                                  /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+                                  tabIndex='0'
+                                  className='cursor-pointer hover:bg-primary-200 rounded-full h-5 w-5 text-gray-400 duration-300 transition p-1'
+                                >
+                                  <FontAwesomeIcon icon={faEllipsisV} />
+                                </label>
+                                <ul
+                                  /* eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex */
+                                  tabIndex='0'
+                                  className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52 z-10'
+                                >
+                                  <li>
+                                    <Link
+                                      className='flex justify-between w-full'
+                                      to={getShowCloneRoute(son)}
+                                    >
+                                      Ver
+                                      <FontAwesomeIcon icon={faEye} />
+                                    </Link>
+                                  </li>
+                                  <li>
+                                    <button
+                                      type='button'
+                                      className='flex justify-between w-full'
+                                    >
+                                      Eliminar
+                                      <FontAwesomeIcon icon={faTrash} />
+                                    </button>
+                                  </li>
+                                </ul>
+                              </div>
+                            </td>
+                          </tr>
+                        ))
+                      : 'No se han creado seguimientos'}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </main>

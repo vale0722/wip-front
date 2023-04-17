@@ -8,8 +8,8 @@ import Task from 'presentation/components/molecules/Task';
 import Reference from 'presentation/components/molecules/Reference';
 
 export default function Content() {
-  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm);
-  const areaTopics = useSelector((state) => state.areaTopics);
+  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
+  const areaTopics = useSelector((state) => state.areaTopics.value);
 
   return (
     <div className='flex flex-col h-full w-full gap-2 overflow-y-scroll'>

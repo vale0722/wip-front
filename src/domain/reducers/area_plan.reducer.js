@@ -1,102 +1,81 @@
-import services from 'domain/services';
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [];
+export const areaPlanSlice = createSlice({
+  name: 'area_plan',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getAreaPlan: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload ?? {};
+    },
+  },
+});
 
-export function storeAreaPlan(data) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'area_plan',
-      payload: await services.areaPlan.store(data),
-    });
-  };
-}
+export const { getAreaPlan } = areaPlanSlice.actions;
+export const areaPlan = areaPlanSlice.reducer;
 
-export function getAreaPlans(data, grade, area) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'area_plan/index',
-      payload: (await services.areaPlan.index(data, grade, area)).data ?? [],
-    });
-  };
-}
+export const areaPlansSlice = createSlice({
+  name: 'area_plans',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getAreaPlans: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload.data ?? [];
+    },
+  },
+});
 
-export function getAreaPlan(data, plan) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'area_plan',
-      payload: (await services.areaPlan.show(data, plan)) ?? {},
-    });
-  };
-}
+export const { getAreaPlans } = areaPlansSlice.actions;
+export const areaPlans = areaPlansSlice.reducer;
 
-export function getAreaCompetences(setIsLoading, plan) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'competences',
-      payload:
-        (await services.areaPlan.getCompetences(setIsLoading, plan)) ?? [],
-    });
-  };
-}
+export const areaCompetencesSlice = createSlice({
+  name: 'area_competences',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getAreaCompetences: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload ?? [];
+    },
+  },
+});
 
-export function getAreaTopics(setIsLoading, plan) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'topics',
-      payload: (await services.areaPlan.getTopics(setIsLoading, plan)) ?? [],
-    });
-  };
-}
+export const { getAreaCompetences } = areaCompetencesSlice.actions;
+export const areaCompetences = areaCompetencesSlice.reducer;
 
-export function getPerformanceIndicators(setIsLoading, plan) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'indicators',
-      payload:
-        (await services.areaPlan.getPerformanceIndicators(
-          setIsLoading,
-          plan
-        )) ?? [],
-    });
-  };
-}
+export const areaTopicsSlice = createSlice({
+  name: 'area_topics',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getAreaTopics: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload ?? [];
+    },
+  },
+});
 
-export function areaPlan(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'area_plan/index':
-    case 'area_plan':
-      return action.payload;
-    default:
-      return state;
-  }
-}
+export const { getAreaTopics } = areaTopicsSlice.actions;
+export const areaTopics = areaTopicsSlice.reducer;
 
-export function areaCompetences(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'competences':
-      return action.payload;
-    default:
-      return state;
-  }
-}
+export const performanceIndicatorsSlice = createSlice({
+  name: 'performance_indicators',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getPerformanceIndicators: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload ?? [];
+    },
+  },
+});
 
-export function performanceIndicators(
-  state = initialState,
-  action = initialState
-) {
-  switch (action.type) {
-    case 'indicators':
-      return action.payload;
-    default:
-      return state;
-  }
-}
-
-export function areaTopics(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'topics':
-      return action.payload;
-    default:
-      return state;
-  }
-}
+export const { getPerformanceIndicators } = performanceIndicatorsSlice.actions;
+export const performanceIndicators = performanceIndicatorsSlice.reducer;

@@ -1,21 +1,17 @@
-import services from 'domain/services';
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [];
+export const areaPlanCloneSlice = createSlice({
+  name: 'area_plan_clone',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getAreaPlanClone: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload ?? {};
+    },
+  },
+});
 
-export function getAreaPlanClone(data, clone) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'area_plan_clone',
-      payload: (await services.areaPlanClone.show(data, clone)) ?? {},
-    });
-  };
-}
-
-export function areaPlanClone(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'area_plan_clone':
-      return action.payload;
-    default:
-      return state;
-  }
-}
+export const { getAreaPlanClone } = areaPlanCloneSlice.actions;
+export const areaPlanClone = areaPlanCloneSlice.reducer;

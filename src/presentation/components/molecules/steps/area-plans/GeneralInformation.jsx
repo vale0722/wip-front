@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import { useSelector } from 'react-redux';
 
 export default function GeneralInformation() {
-  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm);
+  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
   const [date, setDate] = useState({
     startDate: areaPlanDataForm.initial_date
       ? new Date(areaPlanDataForm.initial_date)
@@ -43,7 +43,7 @@ export default function GeneralInformation() {
       <div className='flex flex-col gap-2 mb-6'>
         <span className='text-xl font-semibold'>Información general</span>
         <span className='text-sm text-gray-300'>
-          Ingresa la información general del plan de area a crear
+          Ingresa la información general del plan de área a crear
         </span>
       </div>
       <div className='grid grid-cols-2 gap-4'>

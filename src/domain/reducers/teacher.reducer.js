@@ -1,50 +1,33 @@
-import services from 'domain/services';
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [];
+export const teachersSlice = createSlice({
+  name: 'teachers',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getTeachers: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload.data && payload.data.length ? payload.data : [];
+    },
+  },
+});
 
-export function getTeachers(setIsLoading) {
-  return async function action(dispatch) {
-    const data = await services.teachers.index(setIsLoading);
-    dispatch({
-      type: 'teachers/index',
-      payload: data.data && data.data.length ? data.data : initialState,
-    });
-  };
-}
+export const { getTeachers } = teachersSlice.actions;
+export const teachers = teachersSlice.reducer;
 
-export function getTeacher(setIsLoading, teacherId) {
-  return async function action(dispatch) {
-    const data = await services.teachers.show(setIsLoading, teacherId);
-    dispatch({
-      type: 'teachers',
-      payload: data.data ?? initialState,
-    });
-  };
-}
+export const teacherSlice = createSlice({
+  name: 'teacher',
+  initialState: {
+    value: {},
+  },
+  reducers: {
+    getTeacher: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload.data ?? {};
+    },
+  },
+});
 
-export function storeTeacherForm(data) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'teachers',
-      payload: services.teachers.store(data),
-    });
-  };
-}
-
-export function teacher(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'teachers':
-      return action.payload;
-    default:
-      return state;
-  }
-}
-
-export function teachers(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'teachers/index':
-      return action.payload;
-    default:
-      return state;
-  }
-}
+export const { getTeacher } = teacherSlice.actions;
+export const teacher = teacherSlice.reducer;

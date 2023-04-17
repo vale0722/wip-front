@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Header from 'presentation/components/atoms/Header';
 import { Link, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { store } from 'domain/helpers/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { getAreaPlanClone } from 'domain/reducers/area_plan_clone.reducer';
 import services from 'domain/services';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons';
 
 export default function AreaPlansCloneShowPage({ setIsLoading }) {
-  const plan = useSelector((state) => state.areaPlanClone);
+  const plan = useSelector((state) => state.areaPlanClone.value);
   const [activityFormValue, setActivityFormValue] = useState();
   const [creativeAgent, setCreativeAgent] = useState(
     plan.id ? plan.creative_agenda.activities : []
@@ -18,9 +17,12 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
   const [activities, setActivities] = useState(plan.id ? plan.activities : []);
   const { clone: cloneId } = useParams();
 
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(getAreaPlanClone(setIsLoading, cloneId));
-  }, []);
+    services.areaPlanClone
+      .show(setIsLoading, cloneId)
+      .then((data) => dispatch(getAreaPlanClone(data)));
+  }, [dispatch]);
 
   useEffect(() => {
     setCreativeAgent(plan.id ? plan.creative_agenda.activities : []);

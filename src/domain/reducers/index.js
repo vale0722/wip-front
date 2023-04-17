@@ -1,6 +1,7 @@
 import { areaPlanDataForm } from 'domain/reducers/area_plan_form.reducer';
 import {
   areaPlan,
+  areaPlans,
   areaCompetences,
   performanceIndicators,
   areaTopics,
@@ -10,21 +11,21 @@ import { grade, grades } from 'domain/reducers/grade.reducer';
 import { teacher, teachers } from 'domain/reducers/teacher.reducer';
 import { groups } from 'domain/reducers/group.reducer';
 import { area } from 'domain/reducers/area.reducer';
-import { combineReducers } from 'redux';
+import { subjects } from 'domain/reducers/subjects.reducer';
 
-const rootReducer = combineReducers({
+export default {
+  grade,
+  grades,
+  subjects,
   areaPlanDataForm,
   performanceIndicators,
   areaTopics,
   areaCompetences,
   areaPlan,
+  areaPlans,
   areaPlanClone,
   area,
-  grade,
-  grades,
   teachers,
   teacher,
   groups,
-});
-
-export default rootReducer;
+};

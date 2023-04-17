@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEllipsisV, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import config from 'domain/config';
-import { useSelector } from 'react-redux';
-import { store } from 'domain/helpers/store';
+import { useDispatch, useSelector } from 'react-redux';
 import { getTeachers } from 'domain/reducers/teacher.reducer';
 import services from 'domain/services';
 
@@ -13,16 +12,19 @@ export default function Teachers({ setIsLoading }) {
   const getShowRoute = (id) =>
     config.routes.teachers.show.path.replace(':teacher', id);
 
-  const teachers = useSelector((state) => state.teachers);
+  const teachers = useSelector((state) => state.teachers.value);
   const [alertItem, setAlertItem] = useState(false);
 
+  const dispatch = useDispatch();
   const getCreateRoute = () => config.routes.teachers.store.path;
   const deleteTeacher = async (id) => {
     setIsLoading(true);
     const response = await services.teachers.remove(setIsLoading, id);
     if (response.status === 'OK') {
       setAlertItem(true);
-      store.dispatch(getTeachers(setIsLoading));
+      services.teachers.index(setIsLoading).then((data) => {
+        dispatch(getTeachers(data));
+      });
       setTimeout(() => {
         setAlertItem(false);
       }, 5000);
@@ -33,8 +35,10 @@ export default function Teachers({ setIsLoading }) {
   };
 
   useEffect(() => {
-    store.dispatch(getTeachers(setIsLoading));
-  }, []);
+    services.teachers.index(setIsLoading).then((data) => {
+      dispatch(getTeachers(data));
+    });
+  }, [dispatch]);
 
   return (
     <div className='flex flex-col h-full w-full items-center'>
@@ -117,7 +121,9 @@ export default function Teachers({ setIsLoading }) {
                 ? teachers.map((teacher) => (
                     <tr key={teacher.id}>
                       <td>
-                        <div className='font-bold'>{teacher.name}</div>
+                        <Link to={getShowRoute(teacher.id)}>
+                          <div className='font-bold'>{teacher.name}</div>
+                        </Link>
                       </td>
                       <td>{teacher.group_name}</td>
                       <td>{teacher.createdAt}</td>

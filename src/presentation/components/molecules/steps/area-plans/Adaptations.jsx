@@ -3,7 +3,7 @@ import TodoList from 'presentation/components/molecules/TodoList';
 import { useSelector } from 'react-redux';
 
 export default function Adaptations() {
-  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm);
+  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
 
   return (
     <div className='flex flex-col h-full w-full gap-2 overflow-y-scroll'>

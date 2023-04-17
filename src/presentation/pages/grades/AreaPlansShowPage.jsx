@@ -4,17 +4,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
-import { useSelector } from 'react-redux';
-import { store } from 'domain/helpers/store';
+import { useSelector, useDispatch } from 'react-redux';
 import { getAreaPlan } from 'domain/reducers/area_plan.reducer';
 import services from 'domain/services';
 
 export default function AreaPlansShowPage({ setIsLoading }) {
-  const plan = useSelector((state) => state.areaPlan);
+  const plan = useSelector((state) => state.areaPlan.value);
   const { plan: planId, grade: gradeId, area: areaId } = useParams();
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    store.dispatch(getAreaPlan(setIsLoading, planId));
-  }, []);
+    services.areaPlan
+      .show(setIsLoading, planId)
+      .then((data) => dispatch(getAreaPlan(data)));
+  }, [dispatch]);
 
   const clone = async () => {
     await services.area.clone(setIsLoading, planId);

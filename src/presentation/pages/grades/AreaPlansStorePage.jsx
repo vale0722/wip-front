@@ -5,25 +5,34 @@ import { Link, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import config from 'domain/config';
-import { useSelector } from 'react-redux';
-import { store } from 'domain/helpers/store';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   getAreaCompetences,
   getAreaTopics,
   getPerformanceIndicators,
 } from 'domain/reducers/area_plan.reducer';
 import { getArea } from 'domain/reducers/area.reducer';
+import services from 'domain/services';
 
 export default function AreaPlansStorePage({ setIsLoading }) {
   const { area: areaId, grade: gradeId } = useParams();
-  const areaActive = useSelector((state) => state.area);
+  const areaActive = useSelector((state) => state.area.value);
 
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(getArea(setIsLoading, areaId));
-    store.dispatch(getAreaCompetences(setIsLoading, areaId));
-    store.dispatch(getPerformanceIndicators(setIsLoading, areaId));
-    store.dispatch(getAreaTopics(setIsLoading, areaId));
-  }, []);
+    services.area
+      .show(setIsLoading, areaId)
+      .then((data) => dispatch(getArea(data)));
+    services.areaPlan
+      .getCompetences(setIsLoading, areaId)
+      .then((data) => dispatch(getAreaCompetences(data)));
+    services.areaPlan
+      .getPerformanceIndicators(setIsLoading, areaId)
+      .then((data) => dispatch(getPerformanceIndicators(data)));
+    services.areaPlan
+      .getTopics(setIsLoading, areaId)
+      .then((data) => dispatch(getAreaTopics(data)));
+  }, [dispatch]);
 
   return (
     <div className='flex flex-col w-full items-center'>

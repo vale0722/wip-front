@@ -1,59 +1,34 @@
-import services from 'domain/services';
+import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [];
+export const gradeSlice = createSlice({
+  name: 'grade',
+  initialState: {
+    value: {},
+  },
+  reducers: {
+    getGrade: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload.data ?? {};
+    },
+  },
+});
 
-export function getGrades(setIsLoading) {
-  return async function action(dispatch) {
-    const data = await services.grades.index(setIsLoading);
-    dispatch({
-      type: 'grades/index',
-      payload: data.data && data.data.length ? data.data : initialState,
-    });
-  };
-}
+export const gradesSlice = createSlice({
+  name: 'grades',
+  initialState: {
+    value: 0,
+  },
+  reducers: {
+    getGrades: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload.data && payload.data.length ? payload.data : [];
+    },
+  },
+});
 
-export function getGrade(setIsLoading, gradeId) {
-  return async function action(dispatch) {
-    const data = await services.grades.show(setIsLoading, gradeId);
-    dispatch({
-      type: 'grades',
-      payload: data.data ?? initialState,
-    });
-  };
-}
+export const { getGrades } = gradesSlice.actions;
+export const { getGrade} =
+  gradeSlice.actions;
 
-export function storeAreaPlanForm(data) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'grades',
-      payload: services.grades.store(data),
-    });
-  };
-}
-
-export function refreshAreaPlanForm(data) {
-  return async function action(dispatch) {
-    dispatch({
-      type: 'grades',
-      payload: services.grades.remove(data),
-    });
-  };
-}
-
-export function grade(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'grades':
-      return action.payload;
-    default:
-      return state;
-  }
-}
-
-export function grades(state = initialState, action = initialState) {
-  switch (action.type) {
-    case 'grades/index':
-      return action.payload;
-    default:
-      return state;
-  }
-}
+export const grades = gradesSlice.reducer;
+export const grade = gradeSlice.reducer;

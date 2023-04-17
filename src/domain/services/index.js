@@ -5,6 +5,7 @@ import grades from 'domain/services/grades.service';
 import login from 'domain/services/login.service';
 import teachers from 'domain/services/teachers.service';
 import groups from 'domain/services/groups.service';
+import subjects from 'domain/services/subjects.service';
 
 export default {
   areaPlan,
@@ -14,4 +15,5 @@ export default {
   login,
   teachers,
   groups,
+  subjects,
 };

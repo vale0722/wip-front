@@ -36,7 +36,7 @@ export default function AreaPlanForm({ setIsLoading }) {
     },
   ];
 
-  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm);
+  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
   const { area: areaId, grade: gradeId } = useParams();
 
   const submitForm = async () => {

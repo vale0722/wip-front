@@ -1,17 +1,17 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const groupsSlice = createSlice({
-  name: 'groups',
+export const subjectsSlice = createSlice({
+  name: 'subjects',
   initialState: {
     value: [],
   },
   reducers: {
-    getGroups: (state, { payload }) => {
+    getSubjects: (state, { payload }) => {
       // eslint-disable-next-line no-param-reassign
       state.value = payload.data && payload.data.length ? payload.data : [];
     },
   },
 });
 
-export const { getGroups } = groupsSlice.actions;
-export const groups = groupsSlice.reducer;
+export const { getSubjects } = subjectsSlice.actions;
+export const subjects = subjectsSlice.reducer;

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import services from 'domain/services';
 import config from 'domain/config';
-import { store } from 'domain/helpers/store';
 import { getGroups } from 'domain/reducers/group.reducer';
 
 export default function TeacherStoreForm({ setIsLoading }) {
-  const groups = useSelector((state) => state.groups);
+  const groups = useSelector((state) => state.groups.value);
   const [data] = useState({
     name: '',
     lastname: '',
@@ -30,13 +29,14 @@ export default function TeacherStoreForm({ setIsLoading }) {
       );
       return;
     }
-
-    alert('error');
   };
 
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(getGroups(setIsLoading));
-  }, []);
+    services.groups
+      .index(setIsLoading)
+      .then((response) => dispatch(getGroups(response)));
+  }, [dispatch]);
 
   return (
     <div className='flex flex-col gap-6 py-10'>

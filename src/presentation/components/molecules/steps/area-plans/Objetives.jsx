@@ -3,10 +3,10 @@ import TodoList from 'presentation/components/molecules/TodoList';
 import { useSelector } from 'react-redux';
 
 export default function Objetives() {
-  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm);
-  const areaCompetences = useSelector((state) => state.areaCompetences);
+  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
+  const areaCompetences = useSelector((state) => state.areaCompetences.value);
   const performanceIndicators = useSelector(
-    (state) => state.performanceIndicators
+    (state) => state.performanceIndicators.value
   );
   return (
     <div className='flex flex-col h-full w-full gap-2 overflow-y-scroll'>

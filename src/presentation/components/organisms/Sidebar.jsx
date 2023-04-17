@@ -2,9 +2,10 @@ import React, { useEffect } from 'react';
 import config from 'domain/config';
 import { Link } from 'react-router-dom';
 import { useMatch, useResolvedPath } from 'react-router';
-import { useSelector } from 'react-redux';
-import { store } from 'domain/helpers/store';
+import { useSelector, useDispatch } from 'react-redux';
 import { getGrades } from 'domain/reducers/grade.reducer';
+import HtmlParser from 'html-react-parser';
+import services from 'domain/services';
 
 export default function Sidebar({ setIsLoading }) {
   const match = (route) =>
@@ -18,11 +19,13 @@ export default function Sidebar({ setIsLoading }) {
   const getShowRoute = (id) =>
     config.routes.grades.show.path.replace(':grade', id);
 
-  const grades = useSelector((state) => state.grades);
-
+  const grades = useSelector((state) => state.grades.value);
+  const dispatch = useDispatch();
   useEffect(() => {
-    store.dispatch(getGrades(setIsLoading));
-  }, []);
+    services.grades.index(setIsLoading).then((data) => {
+      dispatch(getGrades(data));
+    });
+  }, [dispatch]);
 
   function calculeMatch(showRoute) {
     return showRoute === window.location.pathname ? 'btn-active' : '';
@@ -43,7 +46,7 @@ export default function Sidebar({ setIsLoading }) {
             />
           </div>
         </a>
-        {Object.values(config.routes.auth).map(({ path, title }) => (
+        {Object.values(config.routes.auth).map(({ path, title, icon }) => (
           <li
             className={`${
               match(path) && (path !== '/' || window.location.pathname === '/')
@@ -52,7 +55,10 @@ export default function Sidebar({ setIsLoading }) {
             }`}
             key={title}
           >
-            <Link to={path}>{title}</Link>
+            <Link className='flex gap-3 items-center' to={path}>
+              <div className='h-4 w-4 fill-gray-500'>{HtmlParser(icon)}</div>
+              {title}
+            </Link>
           </li>
         ))}
         <div
@@ -60,7 +66,10 @@ export default function Sidebar({ setIsLoading }) {
           tabIndex='0'
           className='collapse collapse-arrow collapse-open'
         >
-          <div className='collapse-title rounded-xl text-gray-300 font-medium hover:bg-primary-300 hover:bg-opacity-30'>
+          <div className='collapse-title flex items-center gap-3 rounded-xl text-gray-300 font-medium hover:bg-primary-300 hover:bg-opacity-30'>
+            <div className='h-4 w-4 fill-gray-500'>
+              {HtmlParser(config.routes.grades.show.icon)}
+            </div>
             Grados
           </div>
           <div className='collapse-content'>
