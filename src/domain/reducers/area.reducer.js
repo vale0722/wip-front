@@ -8,7 +8,7 @@ export const areaSlice = createSlice({
   reducers: {
     getArea: (state, { payload }) => {
       // eslint-disable-next-line no-param-reassign
-      state.value = payload.data && payload.data.length ? payload.data : [];
+      state.value = payload?.data ?? [];
     },
   },
 });
