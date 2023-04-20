@@ -7,8 +7,10 @@ import config from 'domain/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTeachers } from 'domain/reducers/teacher.reducer';
 import services from 'domain/services';
+import DeleteTeacherModal from '../components/molecules/DeleteTeacherModal';
 
 export default function Teachers({ setIsLoading }) {
+  const [showModal, setShowModal] = useState(false);
   const getShowRoute = (id) =>
     config.routes.teachers.show.path.replace(':teacher', id);
 
@@ -103,6 +105,14 @@ export default function Teachers({ setIsLoading }) {
               Registra un profesor
             </Link>
           </div>
+          <div className='mr-2'>
+            <Link
+              className='btn btn-primary px-4 py-2 !text-sm'
+              // to={getUpdateRoute()}
+            >
+              Actualiza un profesor
+            </Link>
+          </div>
         </div>
 
         <div className='overflow-x-auto h-full w-full'>
@@ -155,7 +165,7 @@ export default function Teachers({ setIsLoading }) {
                               <button
                                 type='button'
                                 className='flex justify-between w-full'
-                                onClick={() => deleteTeacher(teacher.id)}
+                                onClick={() => setShowModal(true)}
                               >
                                 Eliminar
                                 <FontAwesomeIcon icon={faTrash} />
@@ -164,6 +174,12 @@ export default function Teachers({ setIsLoading }) {
                           </ul>
                         </div>
                       </th>
+                      <DeleteTeacherModal
+                        showModal={showModal}
+                        setShowModal={setShowModal}
+                        deleteTeacher={deleteTeacher}
+                        teacher={teacher}
+                      />
                     </tr>
                   ))
                 : ''}

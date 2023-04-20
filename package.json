@@ -20,6 +20,7 @@
     "loadsh": "0.0.4",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
+    "react-daisyui": "^3.1.2",
     "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-loader-spinner": "^5.3.4",
