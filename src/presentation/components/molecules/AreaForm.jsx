@@ -1,35 +1,37 @@
 import React, { useState } from 'react';
 import services from 'domain/services';
 import config from 'domain/config';
-import { useSelector } from 'react-redux';
-import TodoList from 'presentation/components/molecules/TodoList';
+import { useParams } from 'react-router-dom';
 
 export default function AreaForm({ setIsLoading }) {
   const [data] = useState({
     name: '',
-    subjects: [],
   });
-  const subjects = useSelector((state) => state.subjects.value);
+
+  const { grade: gradeId } = useParams();
+
   const submitForm = async () => {
     setIsLoading(true);
-    const response = await services.area.store(setIsLoading, {
+    const response = await services.area.store(setIsLoading, gradeId, {
       name: data.name,
-      subjects: data.subjects,
     });
     if (response) {
       window.location.href = `${
         config.routes.grades.show.path
-      }${config.routes.grades.areas.show.path.replace(
-        ':teacher',
-        response.id
-      )}`;
+      }${config.routes.grades.areas.show.path.replace(':area', response.id)}`;
     }
   };
   return (
     <>
       <input type='checkbox' id='areaClone' className='modal-toggle' />
-      <div className='modal modal-bottom sm:modal-middle'>
-        <div className='gap-4 bg-white shadow p-8 rounded-lg flex flex-col items-start justify-between'>
+      <label
+        htmlFor='areaClone'
+        className='modal modal-bottom sm:modal-middle cursor-pointer'
+      >
+        <label
+          className='modal-box relative gap-4 bg-white shadow p-8 rounded-lg flex flex-col items-start justify-between'
+          htmlFor=''
+        >
           <div className='flex flex-col h-full w-full gap-2'>
             <div className='flex flex-col gap-2 mb-6'>
               <span className='text-xl font-semibold'>Información general</span>
@@ -50,17 +52,6 @@ export default function AreaForm({ setIsLoading }) {
                   className='block form-input !p-2'
                 />
               </div>
-              <div className='flex flex-col gap-2'>
-                <span className='text-md font-semibold'>Asignaturas</span>
-                <TodoList
-                  defaultValue={data.subjects}
-                  onChange={(items) => {
-                    data.subjects = items;
-                  }}
-                  placeholder='Seleccione las asignaturas'
-                  options={subjects}
-                />
-              </div>
             </div>
             <div className='flex items-end justify-end'>
               <button
@@ -72,8 +63,8 @@ export default function AreaForm({ setIsLoading }) {
               </button>
             </div>
           </div>
-        </div>
-      </div>
+        </label>
+      </label>
     </>
   );
 }

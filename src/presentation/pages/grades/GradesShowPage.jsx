@@ -123,7 +123,13 @@ export default function GradesShowPage({ setIsLoading, isLoading }) {
                     >
                       <img
                         className='h-full w-full rounded-full'
-                        src={area.image}
+                        src={
+                          area.image ??
+                          `https://ui-avatars.com/api/?name=${area.name.replace(
+                            ' ',
+                            '+'
+                          )}`
+                        }
                         alt={area.name}
                       />
                     </Link>

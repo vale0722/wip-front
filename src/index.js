@@ -8,12 +8,13 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from "react-router-dom";
 import {Provider} from "react-redux";
 import {store} from "domain/helpers/store";
+import history from "domain/helpers/history";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
       <Provider store={store}>
-        <BrowserRouter>
+        <BrowserRouter history={history}>
         <App />
         </BrowserRouter>
       </Provider>
