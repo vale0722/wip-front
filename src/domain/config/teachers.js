@@ -7,4 +7,8 @@ module.exports = {
     path: '/teachers/create',
     title: 'Crear Profesor',
   },
+  update: {
+    path: '/teacher/:teacherId/update',
+    title: 'Actualizar Profesor',
+  },
 };

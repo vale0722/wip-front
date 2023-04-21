@@ -8,6 +8,10 @@ export default function DeleteTeacherModal({
   deleteTeacher,
   teacher,
 }) {
+  const handleDeleteTeacher = () => {
+    deleteTeacher(teacher.id);
+    setShowModal(false);
+  };
   return (
     <div>
       <Modal
@@ -20,10 +24,18 @@ export default function DeleteTeacherModal({
           <p>¿Estás seguro que deseas eliminar este profesor?</p>
         </Modal.Body>
         <Modal.Actions>
-          <Button onClick={() => deleteTeacher(teacher.id)} variant='primary'>
+          <Button
+            className='btn-primary'
+            onClick={handleDeleteTeacher}
+            variant='primary'
+          >
             Sí, eliminar
           </Button>
-          <Button onClick={() => setShowModal(false)} variant='primary'>
+          <Button
+            className='btn-primary'
+            onClick={() => setShowModal(false)}
+            variant='primary'
+          >
             Cancelar
           </Button>
         </Modal.Actions>
