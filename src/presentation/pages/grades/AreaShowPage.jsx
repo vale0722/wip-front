@@ -6,6 +6,7 @@ import {
   faFloppyDisk,
   faPencil,
   faTrash,
+  faPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
@@ -105,9 +106,23 @@ export default function AreaShowPage({ setIsLoading }) {
             </div>
           </div>
           <div>
-            <h3 className='text-gray-600 text-xl font-semibold mb-4'>
-              Asignaturas
-            </h3>
+            <div className='flex justify-between w-full item-center'>
+              <h3 className='text-gray-600 text-xl font-semibold mb-4'>
+                Asignaturas
+              </h3>
+              <Link
+                to={`${config.routes.grades.show.path.replace(
+                  ':grade',
+                  areaActive.id ? areaActive.grade.id : ''
+                )}${config.routes.grades.areas.subjects.routes.store.path.replace(
+                  ':area',
+                  areaActive.id
+                )}`}
+                className='text-gray-600 text-xl font-semibold mb-4 cursor-pointer flex justify-end items-center p-2 rounded-full hover:bg-primary-200'
+              >
+                <FontAwesomeIcon icon={faPlus} />
+              </Link>
+            </div>
             <ul className='bg-white shadow mt-3 gap-3 rounded-lg flex flex-col items-start justify-between w-full'>
               {areaActive.id
                 ? areaActive.signatures.map((signature) => (

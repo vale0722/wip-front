@@ -12,6 +12,7 @@ import { teacher, teachers } from 'domain/reducers/teacher.reducer';
 import { groups } from 'domain/reducers/group.reducer';
 import { area } from 'domain/reducers/area.reducer';
 import { subjects } from 'domain/reducers/subjects.reducer';
+import { subjectDataForm } from 'domain/reducers/subject_form.reducer';
 
 export default {
   grade,
@@ -28,4 +29,5 @@ export default {
   teachers,
   teacher,
   groups,
+  subjectDataForm,
 };

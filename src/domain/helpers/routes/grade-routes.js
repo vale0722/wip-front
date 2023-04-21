@@ -4,6 +4,7 @@ import AreaShowPage from 'presentation/pages/grades/AreaShowPage';
 import AreaPlansPage from 'presentation/pages/grades/AreaPlansPage';
 import AreaPlansShowPage from 'presentation/pages/grades/AreaPlansShowPage';
 import AreaPlansStorePage from 'presentation/pages/grades/AreaPlansStorePage';
+import SubjectStorePage from 'presentation/pages/grades/SubjectStorePage';
 import AreaPlansCloneShowPage from 'presentation/pages/grades/AreaPlansCloneShowPage';
 
 export default [
@@ -24,6 +25,12 @@ export default [
     key: 'AREA_PLANS',
     isAuth: true,
     element: AreaPlansPage,
+  },
+  {
+    path: `${config.routes.grades.show.path}${config.routes.grades.areas.subjects.routes.store.path}`,
+    key: 'SUBJECTS_STORE',
+    isAuth: true,
+    element: SubjectStorePage,
   },
   {
     path: `${config.routes.grades.show.path}${config.routes.grades.areas.plans.routes.store.path}`,

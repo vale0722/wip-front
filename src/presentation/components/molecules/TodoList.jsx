@@ -120,6 +120,7 @@ export default function TodoList({
       ) : (
         <input
           key={uuidv4()}
+          placeholder={placeholder}
           onInput={(event) =>
             setSelected({
               key: uuidv4(),

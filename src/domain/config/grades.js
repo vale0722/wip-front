@@ -13,6 +13,14 @@ module.exports = {
       path: '/areas/create/form',
       title: 'Crear área integrada',
     },
+    subjects: {
+      routes: {
+        store: {
+          path: '/areas/:area/subjects/create/form',
+          title: 'Crear área integrada',
+        },
+      },
+    },
     plans: {
       path: '/areas/:area/plans',
       title: 'Planes de clase',
