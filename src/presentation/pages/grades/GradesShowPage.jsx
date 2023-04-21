@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from 'presentation/components/atoms/Header';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
@@ -7,6 +7,9 @@ import { getGrade } from 'domain/reducers/grade.reducer';
 import services from 'domain/services';
 import AreaForm from 'presentation/components/molecules/AreaForm';
 import { getSubjects } from 'domain/reducers/subjects.reducer';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DeleteArea from 'presentation/components/molecules/DeleteArea';
 
 export default function GradesShowPage({ setIsLoading, isLoading }) {
   const gradeActive = useSelector((state) => state.grade.value);
@@ -26,6 +29,8 @@ export default function GradesShowPage({ setIsLoading, isLoading }) {
       dispatch(getSubjects(data));
     });
   }, [gradeId]);
+
+  const [areaActive, setAreaActive] = useState({});
 
   return !isLoading && gradeActive.id ? (
     <div className='flex flex-col h-full items-center m-8'>
@@ -117,22 +122,34 @@ export default function GradesShowPage({ setIsLoading, isLoading }) {
                     className='flex flex-col items-center space-y-2 tooltip tooltip-primary transition ease-in duration-200 hover:scale-105'
                     data-tip={area.name}
                   >
-                    <Link
-                      className='w-32 h-32 block bg-white p-1 rounded-full'
-                      to={getShowRoute(area.id)}
-                    >
-                      <img
-                        className='h-full w-full rounded-full'
-                        src={
-                          area.image ??
-                          `https://ui-avatars.com/api/?name=${area.name.replace(
-                            ' ',
-                            '+'
-                          )}`
-                        }
-                        alt={area.name}
-                      />
-                    </Link>
+                    <div className='indicator group'>
+                      <a
+                        href='#confirm-delete'
+                        onClick={() => setAreaActive(area)}
+                        className='cursor-pointer hidden group-hover:flex indicator-item badge badge-error p-1'
+                      >
+                        <FontAwesomeIcon
+                          className='h-3 w-3 text-white'
+                          icon={faXmark}
+                        />
+                      </a>
+                      <Link
+                        className='w-32 h-32 block bg-white p-1 rounded-full'
+                        to={getShowRoute(area.id)}
+                      >
+                        <img
+                          className='h-full w-full rounded-full'
+                          src={
+                            area.image ??
+                            `https://ui-avatars.com/api/?name=${area.name.replace(
+                              ' ',
+                              '+'
+                            )}`
+                          }
+                          alt={area.name}
+                        />
+                      </Link>
+                    </div>
                     <h4 className='text-gray-700 text-sm font-semibold'>
                       {area.name}
                     </h4>
@@ -166,6 +183,17 @@ export default function GradesShowPage({ setIsLoading, isLoading }) {
           <AreaForm setIsLoading={setIsLoading} isLoading={isLoading} />
         </article>
       </main>
+
+      <DeleteArea
+        setIsLoading={setIsLoading}
+        areaId={areaActive.id}
+        setAreaActive={setAreaActive}
+        refresh={() =>
+          services.grades.show(setIsLoading, gradeId).then((data) => {
+            dispatch(getGrade(data));
+          })
+        }
+      />
     </div>
   ) : (
     ''

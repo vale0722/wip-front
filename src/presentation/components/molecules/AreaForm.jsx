@@ -16,9 +16,10 @@ export default function AreaForm({ setIsLoading }) {
       name: data.name,
     });
     if (response) {
-      window.location.href = `${
-        config.routes.grades.show.path
-      }${config.routes.grades.areas.show.path.replace(':area', response.id)}`;
+      window.location.href = `${config.routes.grades.show.path.replace(
+        ':grade',
+        gradeId
+      )}${config.routes.grades.areas.show.path.replace(':area', response.id)}`;
     }
   };
   return (
