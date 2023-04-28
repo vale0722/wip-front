@@ -85,7 +85,7 @@ export default function TeacherUpdateForm({ setIsLoading }) {
                 />
               </div>
               <div className='flex flex-col gap-2'>
-                <label className='text-md font-bold'>Contraseña</label>
+                <label className='text-md font-bold'>Contraseña Nueva</label>
                 <input
                   onInput={(event) => {
                     setData({ ...data, password: event.target.value });

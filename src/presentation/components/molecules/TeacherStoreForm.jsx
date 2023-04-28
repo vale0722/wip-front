@@ -27,6 +27,7 @@ export default function TeacherStoreForm({ setIsLoading }) {
         ':teacher',
         response.id
       );
+      // eslint-disable-next-line
       return;
     }
   };
@@ -74,7 +75,11 @@ export default function TeacherStoreForm({ setIsLoading }) {
               </div>
               <div className='flex flex-col gap-2'>
                 <label className='text-md font-bold'>Correo Electrónico</label>
+                <label className='text-xs text-gray-300'>
+                  El correo electrónico no se podrá cambiar después.
+                </label>
                 <input
+                  // onClick={() => alert('Asegurate del correo')}
                   onInput={(event) => {
                     data.email = event.target.value;
                   }}
