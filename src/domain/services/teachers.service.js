@@ -45,7 +45,10 @@ async function update(setIsLoading, teacher, data) {
   try {
     const response = await service.put(`/api/teachers/${teacher}`, data);
     setIsLoading(false);
-    return response.data.status.status === 'OK' ? response.data.data : null;
+    // eslint-disable-next-line
+    console.log(response)
+    // eslint-disable-next-line
+    return response.data.status.status === 'OK' ? response.data.status.message : null;
   } catch (error) {
     setIsLoading(false);
     return {};

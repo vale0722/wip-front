@@ -1,43 +1,51 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import services from 'domain/services';
-import config from 'domain/config';
+// import config from 'domain/config';
 import { getGroups } from 'domain/reducers/group.reducer';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getTeacher } from '../../../domain/reducers/teacher.reducer';
 
-export default function TeacherStoreForm({ setIsLoading }) {
-  const groups = useSelector((state) => state.groups.value);
-  const [data] = useState({
-    name: '',
-    lastname: '',
-    email: '',
-    password: '',
-    grade: '',
-    group: '',
-  });
-  const submitForm = async () => {
-    setIsLoading(true);
-    const response = await services.teachers.store(setIsLoading, {
-      name: `${data.name} ${data.lastname}`,
-      email: data.email,
-      password: data.password,
-      group_id: data.group,
-    });
-    if (response) {
-      window.location.href = config.routes.teachers.show.path.replace(
-        ':teacher',
-        response.id
-      );
-      // eslint-disable-next-line
-      return;
-    }
-  };
-
+export default function TeacherUpdateForm({ setIsLoading }) {
+  const navigate = useNavigate();
+  const { teacherId } = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
     services.groups
       .index(setIsLoading)
       .then((response) => dispatch(getGroups(response)));
   }, [dispatch]);
+  useEffect(() => {
+    services.teachers
+      .show(setIsLoading, teacherId)
+      .then((data) => dispatch(getTeacher(data)));
+  }, [dispatch]);
+  const teacher = useSelector((state) => state.teacher.value);
+  const groups = useSelector((state) => state.groups.value);
+  const [data, setData] = useState({});
+  useEffect(() => {
+    setData({
+      name: teacher.name,
+      email: teacher.email,
+      password: teacher.password,
+      grade: teacher.grade,
+      group: teacher.group_id,
+    });
+  }, [teacher]);
+
+  const submitForm = async () => {
+    setIsLoading(true);
+    const response = await services.teachers.update(setIsLoading, teacher.id, {
+      name: `${data.name}`,
+      email: data.email,
+      password: data.password,
+      group_id: data.group,
+    });
+
+    if (response) {
+      navigate('/teachers');
+    }
+  };
 
   return (
     <div className='flex flex-col gap-6 py-10'>
@@ -54,32 +62,20 @@ export default function TeacherStoreForm({ setIsLoading }) {
               <div className='flex flex-col gap-2'>
                 <label className='text-md font-bold'>Nombre</label>
                 <input
+                  value={data.name}
                   type='text'
                   onInput={(event) => {
-                    data.name = event.target.value;
+                    setData({ ...data, name: event.target.value });
                   }}
                   placeholder='Ingrese un nombre'
                   className='block form-input !p-2'
                 />
               </div>
               <div className='flex flex-col gap-2'>
-                <label className='text-md font-bold'>Apellído</label>
-                <input
-                  type='text'
-                  onInput={(event) => {
-                    data.lastname = event.target.value;
-                  }}
-                  placeholder='Ingrese su apellído'
-                  className='block form-input !p-2'
-                />
-              </div>
-              <div className='flex flex-col gap-2'>
                 <label className='text-md font-bold'>Correo Electrónico</label>
-                <label className='text-xs text-gray-300'>
-                  El correo electrónico no se podrá cambiar después.
-                </label>
                 <input
-                  // onClick={() => alert('Asegurate del correo')}
+                  disabled
+                  value={data.email}
                   onInput={(event) => {
                     data.email = event.target.value;
                   }}
@@ -89,10 +85,10 @@ export default function TeacherStoreForm({ setIsLoading }) {
                 />
               </div>
               <div className='flex flex-col gap-2'>
-                <label className='text-md font-bold'>Contraseña</label>
+                <label className='text-md font-bold'>Contraseña Nueva</label>
                 <input
                   onInput={(event) => {
-                    data.password = event.target.value;
+                    setData({ ...data, password: event.target.value });
                   }}
                   type='password'
                   placeholder='Ingrese una contraseña'
@@ -103,8 +99,9 @@ export default function TeacherStoreForm({ setIsLoading }) {
                 <label className='text-md font-bold'>Grupos</label>
                 <select
                   defaultValue='default'
+                  value={data.group}
                   onInput={(event) => {
-                    data.group = event.target.value;
+                    setData({ ...data, group: event.target.value });
                   }}
                   className='block form-input !p-2'
                 >
