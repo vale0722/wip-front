@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import Header from 'presentation/components/atoms/Header';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faAngleRight } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAreaPlan } from 'domain/reducers/area_plan.reducer';
 import services from 'domain/services';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AreaPlansShowPage({ setIsLoading }) {
   const plan = useSelector((state) => state.areaPlan.value);
@@ -34,35 +33,55 @@ export default function AreaPlansShowPage({ setIsLoading }) {
   return (
     <div className='flex flex-col h-full w-full'>
       <Header height='h-full' />
-      <div className='flex gap-3 text-sm capitalize m-10 mb-0'>
-        <Link to={config.routes.grades.show.path.replace(':grade', gradeId)}>
-          {gradeId}
-        </Link>
-        <span>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </span>
-        <Link
-          to={`${config.routes.grades.areas.show.path.replace(
-            ':area',
-            areaId
-          )}`}
-        >
-          {plan.id ? plan.area.name : ''}
-        </Link>
-        <span>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </span>
-        <Link
-          to={`${
-            config.routes.grades.show.path.replace(':grade', gradeId) +
-            config.routes.grades.areas.plans.routes.show.path
-              .replace(':area', areaId)
-              .replace(':show', plan.id)
-          }`}
-          className='font-semibold'
-        >
-          {plan.id ? plan.area.name : ''}
-        </Link>
+      <div className='text-sm breadcrumbs capitalize'>
+        <ul>
+          <li>
+            <Link
+              to={config.routes.grades.show.path.replace(':grade', gradeId)}
+            >
+              {plan.id ? plan.area.grade.name : ''}
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`${config.routes.grades.show.path.replace(
+                ':grade',
+                gradeId
+              )}${config.routes.grades.areas.show.path.replace(
+                ':area',
+                areaId
+              )}`}
+            >
+              {plan.id ? plan.area.name : ''}
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`${config.routes.grades.show.path.replace(
+                ':grade',
+                gradeId
+              )}${config.routes.grades.areas.plans.path.replace(
+                ':area',
+                areaId
+              )}`}
+            >
+              Planes de clase
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={`${
+                config.routes.grades.show.path.replace(':grade', gradeId) +
+                config.routes.grades.areas.plans.routes.show.path
+                  .replace(':area', areaId)
+                  .replace(':show', plan.id)
+              }`}
+              className='font-semibold'
+            >
+              {plan.id ? plan.name : ''}
+            </Link>
+          </li>
+        </ul>
       </div>
       <main className='py-2 bg-white bg-opacity-30 grid grid-cols-1 lg:grid-cols-6 gap-6 my-8 w-3xl px-2 mx-auto'>
         <aside className='col-span-2 flex flex-col gap-6'>
@@ -84,7 +103,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                 {plan.id
                   ? plan.competences.length
                     ? plan.competences.map((competence) => (
-                        <li>
+                        <li key={uuidv4()}>
                           <span className='badge badge-primary badge-sm mr-2'>
                             {competence.competence.subject.name}
                           </span>
@@ -105,7 +124,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                 {plan.id
                   ? plan.indicators.length
                     ? plan.indicators.map((indicator) => (
-                        <li>
+                        <li key={uuidv4()}>
                           <span className='badge badge-primary badge-sm mr-2'>
                             {indicator.indicator.type}
                           </span>
@@ -403,7 +422,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                       {plan.id
                         ? plan.creative_agenda
                           ? plan.creative_agenda.activities.map((activity) => (
-                              <li>
+                              <li key={uuidv4()}>
                                 {activity.title}: {activity.description}
                               </li>
                             ))
@@ -424,7 +443,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                 {plan.id
                   ? plan.topics.length
                     ? plan.topics.map((topic) => (
-                        <li>
+                        <li key={uuidv4()}>
                           <span className='badge badge-primary badge-sm mr-2'>
                             {topic.topic.subject.name}
                           </span>
@@ -451,7 +470,10 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                 ? !plan.activities.length
                   ? ''
                   : plan.activities.map((activity) => (
-                      <div className='collapse collapse-arrow text-sm capitalize'>
+                      <div
+                        key={uuidv4()}
+                        className='collapse collapse-arrow text-sm capitalize'
+                      >
                         <input type='checkbox' className='peer' />
                         <div className='collapse-title text-gray-500 font-medium'>
                           {activity.title}
@@ -472,7 +494,10 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                 ? !plan.tasks.length
                   ? ''
                   : plan.tasks.map((task) => (
-                      <div className='collapse collapse-arrow text-sm capitalize'>
+                      <div
+                        key={uuidv4()}
+                        className='collapse collapse-arrow text-sm capitalize'
+                      >
                         <input type='checkbox' className='peer' />
                         <div className='collapse-title text-gray-500 font-medium'>
                           {task.title}
@@ -493,7 +518,10 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                 ? !plan.annexes.length
                   ? ''
                   : plan.annexes.map((annexe) => (
-                      <div className='collapse collapse-arrow text-sm'>
+                      <div
+                        key={uuidv4()}
+                        className='collapse collapse-arrow text-sm'
+                      >
                         <input type='checkbox' className='peer' />
                         <div className='collapse-title text-gray-500 font-medium capitalize'>
                           {annexe.title}
@@ -525,7 +553,10 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                 ? !plan.references.length
                   ? ''
                   : plan.references.map((reference) => (
-                      <div className='collapse collapse-arrow text-sm capitalize'>
+                      <div
+                        key={uuidv4()}
+                        className='collapse collapse-arrow text-sm capitalize'
+                      >
                         <input type='checkbox' className='peer' />
                         <div className='collapse-title text-gray-500 font-medium'>
                           {reference.title}
@@ -548,7 +579,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
               <ul className='list-disc px-4'>
                 {plan.id
                   ? JSON.parse(plan.orientations).map((orientation) => (
-                      <li>{orientation}</li>
+                      <li key={uuidv4()}>{orientation}</li>
                     ))
                   : ''}
               </ul>
@@ -561,7 +592,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
               <ul className='list-disc px-4'>
                 {plan.id
                   ? JSON.parse(plan.adaptations).map((adaptation) => (
-                      <li>{adaptation}</li>
+                      <li key={uuidv4()}>{adaptation}</li>
                     ))
                   : ''}
               </ul>

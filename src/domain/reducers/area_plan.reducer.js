@@ -79,3 +79,19 @@ export const performanceIndicatorsSlice = createSlice({
 
 export const { getPerformanceIndicators } = performanceIndicatorsSlice.actions;
 export const performanceIndicators = performanceIndicatorsSlice.reducer;
+
+export const areaObjetivesSlice = createSlice({
+  name: 'area_objetives',
+  initialState: {
+    value: [],
+  },
+  reducers: {
+    getAreaObjetives: (state, { payload }) => {
+      // eslint-disable-next-line no-param-reassign
+      state.value = payload ?? [];
+    },
+  },
+});
+
+export const { getAreaObjetives } = areaObjetivesSlice.actions;
+export const areaObjetives = areaObjetivesSlice.reducer;

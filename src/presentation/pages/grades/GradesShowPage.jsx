@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getGrade } from 'domain/reducers/grade.reducer';
 import services from 'domain/services';
 import AreaForm from 'presentation/components/molecules/AreaForm';
-import { getSubjects } from 'domain/reducers/subjects.reducer';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DeleteArea from 'presentation/components/molecules/DeleteArea';
@@ -23,10 +22,6 @@ export default function GradesShowPage({ setIsLoading, isLoading }) {
   useEffect(() => {
     services.grades.show(setIsLoading, gradeId).then((data) => {
       dispatch(getGrade(data));
-    });
-
-    services.subjects.index(setIsLoading, gradeId).then((data) => {
-      dispatch(getSubjects(data));
     });
   }, [gradeId]);
 

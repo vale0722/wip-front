@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
 import DateRange from 'react-date-range/dist/components/DateRangePicker';
 import dayjs from 'dayjs';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setInitialDate,
+  setEndDate,
+  setName,
+  setWeek,
+} from 'domain/reducers/area_plan_form.reducer';
 
 export default function GeneralInformation() {
+  const dispatch = useDispatch();
   const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
   const [date, setDate] = useState({
     startDate: areaPlanDataForm.initial_date
@@ -26,17 +33,9 @@ export default function GeneralInformation() {
         item.selection.endDate
       )}`
     );
-    areaPlanDataForm.initial_date = formatDate(item.selection.startDate);
-    areaPlanDataForm.end_date = formatDate(item.selection.endDate);
+    dispatch(setInitialDate(formatDate(item.selection.startDate)));
+    dispatch(setEndDate(formatDate(item.selection.endDate)));
   };
-
-  function setName(event) {
-    areaPlanDataForm.name = event.target.value;
-  }
-
-  function setWeeks(event) {
-    areaPlanDataForm.week = event.target.value;
-  }
 
   return (
     <div className='flex flex-col h-full w-full gap-2'>
@@ -51,7 +50,7 @@ export default function GeneralInformation() {
           <label className='text-md font-bold'>Nombre</label>
           <input
             defaultValue={areaPlanDataForm.name}
-            onInput={setName}
+            onInput={(event) => dispatch(setName(event.target.value))}
             type='text'
             placeholder='Ingrese un nombre'
             className='block form-input !p-2'
@@ -62,7 +61,7 @@ export default function GeneralInformation() {
           <input
             defaultValue={areaPlanDataForm.week}
             type='text'
-            onInput={setWeeks}
+            onInput={(event) => dispatch(setWeek(event.target.value))}
             placeholder='Ingrese las semanas'
             className='block form-input !p-2'
           />

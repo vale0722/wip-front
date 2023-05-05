@@ -17,7 +17,11 @@ module.exports = {
       routes: {
         store: {
           path: '/areas/:area/subjects/create/form',
-          title: 'Crear área integrada',
+          title: 'Crear asignatura',
+        },
+        show: {
+          path: '/areas/:area/subjects/:subject',
+          title: 'Ver asignatura',
         },
       },
     },

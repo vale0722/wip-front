@@ -130,9 +130,17 @@ export default function AreaShowPage({ setIsLoading }) {
                       key={signature.id}
                       className='text-sm flex px-6 py-3 flex-col w-full h-full btn btn-ghost normal-case items-start font-normal'
                     >
-                      <a className='p-1' href='#'>
+                      <Link
+                        to={`${config.routes.grades.show.path.replace(
+                          ':grade',
+                          areaActive.id ? areaActive.grade.id : ''
+                        )}${config.routes.grades.areas.subjects.routes.show.path
+                          .replace(':area', areaActive.id)
+                          .replace(':subject', signature.id)}`}
+                        className='p-1 w-full h-full'
+                      >
                         {signature.name}
-                      </a>
+                      </Link>
                     </li>
                   ))
                 : ''}

@@ -2,14 +2,24 @@ import React from 'react';
 import TodoList from 'presentation/components/molecules/TodoList';
 import TodoListModal from 'presentation/components/molecules/TodoListModal';
 import ActivityForm from 'presentation/components/molecules/ActivityForm';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Anexo from 'presentation/components/molecules/Anexo';
 import Task from 'presentation/components/molecules/Task';
 import Reference from 'presentation/components/molecules/Reference';
+import {
+  setActiviesPlanCreative,
+  setPerformanceTopics,
+  setQuestion,
+  setActivities,
+  setTasks,
+  setAnnexes,
+  setReferences,
+} from 'domain/reducers/area_plan_form.reducer';
 
 export default function Content() {
   const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
   const areaTopics = useSelector((state) => state.areaTopics.value);
+  const dispatch = useDispatch();
 
   return (
     <div className='flex flex-col h-full w-full gap-2 overflow-y-scroll'>
@@ -27,7 +37,7 @@ export default function Content() {
             defaultValue={areaPlanDataForm.activiesPlanCreative}
             inputComponent={Task}
             onChange={(items) => {
-              areaPlanDataForm.activiesPlanCreative = items;
+              dispatch(setActiviesPlanCreative(items));
             }}
             placeholder='Escriba una actividad'
           />
@@ -38,7 +48,7 @@ export default function Content() {
           <TodoList
             defaultValue={areaPlanDataForm.performance_topics}
             onChange={(items) => {
-              areaPlanDataForm.performance_topics = items;
+              dispatch(setPerformanceTopics(items));
             }}
             placeholder='Seleccione un tema'
             options={areaTopics}
@@ -50,7 +60,7 @@ export default function Content() {
           <textarea
             defaultValue={areaPlanDataForm.question}
             onInput={(event) => {
-              areaPlanDataForm.question = event.target.value;
+              dispatch(setQuestion(event.target.value));
             }}
             placeholder='Ingrese la pregunta problematizadora'
             className='block form-input !p-2'
@@ -60,7 +70,7 @@ export default function Content() {
         <TodoListModal
           defaultValue={areaPlanDataForm.activities}
           onChange={(items) => {
-            areaPlanDataForm.activities = items;
+            dispatch(setActivities(items));
           }}
           modalComponent={ActivityForm}
           title='Actividades Generales'
@@ -72,7 +82,7 @@ export default function Content() {
             defaultValue={areaPlanDataForm.tasks}
             inputComponent={Task}
             onChange={(items) => {
-              areaPlanDataForm.tasks = items;
+              dispatch(setTasks(items));
             }}
             placeholder='Escriba una tarea'
           />
@@ -84,9 +94,9 @@ export default function Content() {
             defaultValue={areaPlanDataForm.annexes}
             inputComponent={Anexo}
             onChange={(items) => {
-              areaPlanDataForm.annexes = items;
+              dispatch(setAnnexes(items));
             }}
-            placeholder='Seleccione un tema'
+            placeholder='Ingrese un anexo'
           />
         </div>
         <hr />
@@ -96,9 +106,9 @@ export default function Content() {
             defaultValue={areaPlanDataForm.references}
             inputComponent={Reference}
             onChange={(items) => {
-              areaPlanDataForm.references = items;
+              dispatch(setReferences(items));
             }}
-            placeholder='Seleccione un tema'
+            placeholder='Ingrese un referencia'
           />
         </div>
       </div>

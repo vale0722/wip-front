@@ -10,7 +10,7 @@ export default function TodoListModal({
   onChange,
   defaultValue,
 }) {
-  const [items, setItems] = useState(defaultValue ?? []);
+  const [items, setItems] = useState(JSON.parse(JSON.stringify(defaultValue)));
   const [itemsList, setItemsList] = useState('');
 
   const loadList = () => {
@@ -53,8 +53,8 @@ export default function TodoListModal({
 
   const addItem = (selected) => {
     items.push(selected);
-    setItems(items);
-    onChange(items);
+    setItems(JSON.parse(JSON.stringify(items)));
+    onChange(JSON.parse(JSON.stringify(items)));
     loadList();
   };
 

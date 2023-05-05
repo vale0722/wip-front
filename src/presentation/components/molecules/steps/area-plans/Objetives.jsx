@@ -1,8 +1,13 @@
 import React from 'react';
 import TodoList from 'presentation/components/molecules/TodoList';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setPerformanceCompetences,
+  setPerformanceIndicators,
+} from 'domain/reducers/area_plan_form.reducer';
 
 export default function Objetives() {
+  const dispatch = useDispatch();
   const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
   const areaCompetences = useSelector((state) => state.areaCompetences.value);
   const performanceIndicators = useSelector(
@@ -23,7 +28,7 @@ export default function Objetives() {
             placeholder='Seleccione las competencias'
             defaultValue={areaPlanDataForm.performance_competences}
             onChange={(items) => {
-              areaPlanDataForm.performance_competences = items;
+              dispatch(setPerformanceCompetences(items));
             }}
             options={areaCompetences}
           />
@@ -37,7 +42,7 @@ export default function Objetives() {
             placeholder='Seleccione un indicador'
             defaultValue={areaPlanDataForm.performance_indicators}
             onChange={(items) => {
-              areaPlanDataForm.performance_indicators = items;
+              dispatch(setPerformanceIndicators(items));
             }}
             options={performanceIndicators}
           />

@@ -1,6 +1,7 @@
 import React from 'react';
 import config from 'domain/config';
 import service from 'domain/services';
+import { getUser } from 'domain/helpers/storage';
 
 export default function Navbar({ setIsLoading }) {
   const logout = async () => {
@@ -13,6 +14,8 @@ export default function Navbar({ setIsLoading }) {
 
     alert('error');
   };
+
+  const { user } = getUser();
 
   return (
     <header
@@ -75,7 +78,10 @@ export default function Navbar({ setIsLoading }) {
             <div className='w-10 rounded-full'>
               <img
                 alt='profile'
-                src='https://ui-avatars.com/api/?name=Valeria+Granada'
+                src={`https://ui-avatars.com/api/?name=${user.name.replace(
+                  ' ',
+                  '+'
+                )}`}
               />
             </div>
           </label>

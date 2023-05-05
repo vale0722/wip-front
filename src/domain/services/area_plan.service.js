@@ -80,6 +80,19 @@ async function getPerformanceIndicators(setIsLoading, area) {
   }
 }
 
+async function getObjetives(setIsLoading, area) {
+  setIsLoading(true);
+
+  try {
+    const response = await service.get(`/api/area-plan/${area}/objetives`);
+    setIsLoading(false);
+    return response.data.data ?? {};
+  } catch (error) {
+    setIsLoading(false);
+    return {};
+  }
+}
+
 export default {
   store,
   index,
@@ -87,4 +100,5 @@ export default {
   getCompetences,
   getTopics,
   getPerformanceIndicators,
+  getObjetives,
 };

@@ -1,9 +1,14 @@
 import React from 'react';
 import TodoList from 'presentation/components/molecules/TodoList';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  setOrientations,
+  setAdaptations,
+} from 'domain/reducers/area_plan_form.reducer';
 
 export default function Adaptations() {
   const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
+  const dispatch = useDispatch();
 
   return (
     <div className='flex flex-col h-full w-full gap-2 overflow-y-scroll'>
@@ -21,7 +26,7 @@ export default function Adaptations() {
           <TodoList
             defaultValue={areaPlanDataForm.orientations}
             onChange={(items) => {
-              areaPlanDataForm.orientations = items;
+              dispatch(setOrientations(items));
             }}
             placeholder='Escriba una orientación'
           />
@@ -31,7 +36,7 @@ export default function Adaptations() {
           <TodoList
             defaultValue={areaPlanDataForm.adaptations}
             onChange={(items) => {
-              areaPlanDataForm.adaptations = items;
+              dispatch(setAdaptations(items));
             }}
             placeholder='Escriba una adaptación'
           />
