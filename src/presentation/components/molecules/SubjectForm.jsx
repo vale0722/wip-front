@@ -3,12 +3,14 @@ import { v4 as uuidv4 } from 'uuid';
 import Step from 'presentation/components/atoms/Step';
 import GeneralInformation from 'presentation/components/molecules/steps/subjects/GeneralInformation';
 import Objetives from 'presentation/components/molecules/steps/subjects/Objetives';
-import Adaptations from 'presentation/components/molecules/steps/subjects/Adaptations';
+import Content from 'presentation/components/molecules/steps/subjects/Content';
 import Competences from 'presentation/components/molecules/steps/subjects/Competences';
-import { useSelector } from 'react-redux';
+import Indicators from 'presentation/components/molecules/steps/subjects/Indicators';
+import { useDispatch, useSelector } from 'react-redux';
 import service from 'domain/services';
 import { useParams } from 'react-router-dom';
 import config from 'domain/config';
+import { setArea } from 'domain/reducers/subject_form.reducer';
 
 export default function SubjectForm({ setIsLoading }) {
   const steps = [
@@ -18,41 +20,47 @@ export default function SubjectForm({ setIsLoading }) {
       component: GeneralInformation,
     },
     {
+      name: 'Objetivos',
+      description:
+        '¿Cuales son los objetivos que desarrollaran los estudiante con el contenido de esta asignatura?',
+      component: Objetives,
+    },
+    {
       name: 'Competencias',
       description:
-        '¿Cuales son las competencias que deberia tener el estudiante en esta asignatura?',
+        '¿Cuales son las competencias que desarrollará el estudiante en esta asignatura?',
       component: Competences,
     },
     {
       name: 'Indicadores de desempeño',
       description:
         'Describe los indicadores de desempeño con los cuales serán evaluados los estudiantes',
-      component: Objetives,
+      component: Indicators,
     },
     {
       name: 'Temas',
       description:
-        'Describe los Temás que se verán en el transcurso del año académico',
-      component: Adaptations,
+        'Describe los Temas que se verán en el transcurso del año académico',
+      component: Content,
     },
   ];
 
-  const areaPlanDataForm = useSelector((state) => state.areaPlanDataForm.value);
+  const subjectDataForm = useSelector((state) => state.subjectDataForm.value);
   const { area: areaId, grade: gradeId } = useParams();
+  const dispatch = useDispatch();
+  dispatch(setArea(areaId));
 
   const submitForm = async () => {
-    const response = await service.areaPlan.store(
+    const response = await service.subjects.store(
       setIsLoading,
-      areaId,
-      areaPlanDataForm
+      gradeId,
+      subjectDataForm
     );
 
     if (response) {
       window.location.href =
         config.routes.grades.show.path.replace(':grade', gradeId) +
-        config.routes.grades.areas.plans.routes.show.path
-          .replace(':area', areaId)
-          .replace(':plan', response.id);
+        config.routes.grades.areas.show.path.replace(':area', areaId);
       return;
     }
 
@@ -87,7 +95,7 @@ export default function SubjectForm({ setIsLoading }) {
   return (
     <div className='flex flex-col gap-6 py-10'>
       <div className='flex justify-between items-start gap-6 relative'>
-        <div className='flex max-h-96 flex-col sticky bg-white shadow p-8 rounded-lg flex flex-col items-start justify-between'>
+        <div className='flex flex-col sticky bg-white gap-2 shadow p-8 rounded-lg flex flex-col items-start justify-between'>
           {transformStepsMethod.map((step, key) => (
             <Step
               key={uuidv4()}

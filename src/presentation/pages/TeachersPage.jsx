@@ -12,17 +12,16 @@ import config from 'domain/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { getTeachers } from 'domain/reducers/teacher.reducer';
 import services from 'domain/services';
-import DeleteTeacherModal from '../components/molecules/DeleteTeacherModal';
+import DeleteTeacherModal from 'presentation/components/molecules/DeleteTeacherModal';
 
 export default function Teachers({ setIsLoading }) {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
+  const [teacherActive, setTeacherActive] = useState({});
   const getShowRoute = (id) =>
     config.routes.teachers.show.path.replace(':teacher', id);
 
   const teachers = useSelector((state) => state.teachers.value);
   const [alertItem, setAlertItem] = useState(false);
-  const [teacherToDelete, setTeacherToDelete] = useState(null);
   const dispatch = useDispatch();
   const getCreateRoute = () => config.routes.teachers.store.path;
   const deleteTeacher = async (id) => {
@@ -173,17 +172,14 @@ export default function Teachers({ setIsLoading }) {
                                 </button>
                               </li>
                               <li>
-                                <button
-                                  type='button'
-                                  className='flex justify-between w-full'
-                                  onClick={() => {
-                                    setTeacherToDelete(teacher);
-                                    setShowModal(true);
-                                  }}
+                                <a
+                                  href='#confirm-delete'
+                                  className='flex justify-between w-full cursor-pointer'
+                                  onClick={() => setTeacherActive(teacher)}
                                 >
                                   Eliminar
                                   <FontAwesomeIcon icon={faTrash} />
-                                </button>
+                                </a>
                               </li>
                             </ul>
                           </div>
@@ -203,10 +199,14 @@ export default function Teachers({ setIsLoading }) {
         </div>
       </div>
       <DeleteTeacherModal
-        showModal={showModal}
-        setShowModal={setShowModal}
+        teacherActive={teacherActive}
+        setTeacherActive={setTeacherActive}
+        refresh={() =>
+          services.teachers.index(setIsLoading).then((data) => {
+            dispatch(getTeachers(data));
+          })
+        }
         deleteTeacher={deleteTeacher}
-        teacher={teacherToDelete}
       />
     </>
   );

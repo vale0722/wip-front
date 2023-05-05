@@ -12,7 +12,7 @@ export default function TodoList({
   placeholder,
   inputComponent,
 }) {
-  const [items, setItems] = useState(defaultValue ?? []);
+  const [items, setItems] = useState(JSON.parse(JSON.stringify(defaultValue)));
   const [clear, setClear] = useState([]);
   const [inputForm, setInputForm] = useState(null);
   const [optionsFiltered, setOptionsFiltered] = useState(
@@ -22,8 +22,8 @@ export default function TodoList({
 
   const addItem = () => {
     items.push(selected);
-    setItems(items);
-    onChange(items);
+    setItems(JSON.parse(JSON.stringify(items)));
+    onChange(JSON.parse(JSON.stringify(items)));
     setSelected({ key: 'default' });
     setClear(true);
     const loostIncludes = (arr, value) => arr.some((item) => item === value);
