@@ -50,8 +50,8 @@ export default function Teachers({ setIsLoading }) {
   return (
     <>
       <div className='flex flex-col h-full w-full items-center'>
-        <Header height='h-32' />
-        <div className='container flex flex-col h-full w-full my-4'>
+        <Header height='h-full' />
+        <div className='container flex flex-col h-full w-full my-4 px-4'>
           {alertItem ? (
             <div
               className='bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md'
@@ -128,11 +128,11 @@ export default function Teachers({ setIsLoading }) {
                 {teachers.length
                   ? teachers.map((teacher) => (
                       <tr key={teacher.id}>
-                        <td>
+                        <th>
                           <Link to={getShowRoute(teacher.id)}>
                             <div className='font-bold'>{teacher.name}</div>
                           </Link>
-                        </td>
+                        </th>
                         <td>{teacher.group_name}</td>
                         <td>{teacher.createdAt}</td>
                         <td>{teacher.updatedAt}</td>

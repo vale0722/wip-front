@@ -6,12 +6,12 @@ import { getAreaPlanClone } from 'domain/reducers/area_plan_clone.reducer';
 import services from 'domain/services';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AreaPlansCloneShowPage({ setIsLoading }) {
   const plan = useSelector((state) => state.areaPlanClone.value);
-  const [activityFormValue, setActivityFormValue] = useState();
   const [creativeAgent, setCreativeAgent] = useState(
-    plan.id ? plan.creative_agenda.activities : []
+    plan.id ? JSON.parse(JSON.stringify(plan.creative_agenda.activities)) : []
   );
   const [tasks, setTasks] = useState(plan.id ? plan.tasks : []);
   const [activities, setActivities] = useState(plan.id ? plan.activities : []);
@@ -31,7 +31,7 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
   }, [plan]);
 
   const resolveActivity = async (key) => {
-    const newActivities = [...activities];
+    const newActivities = JSON.parse(JSON.stringify(activities));
     newActivities[key].done = !newActivities[key].done;
     setActivities(newActivities);
     await services.areaPlanClone.resolveActivity(
@@ -41,17 +41,17 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
   };
 
   const resolveTask = async (key) => {
-    const newTasks = [...tasks];
+    const newTasks = JSON.parse(JSON.stringify(tasks));
     newTasks[key].done = !newTasks[key].done;
     setTasks(newTasks);
     await services.areaPlanClone.resolveTask(setIsLoading, newTasks[key].id);
   };
 
-  const updateFieldOnChange = async (key, withValue) => {
-    const newCreativeAgent = [...creativeAgent];
+  const updateFieldOnChange = async (key, value) => {
+    const newCreativeAgent = JSON.parse(JSON.stringify(creativeAgent));
 
-    if (withValue) {
-      newCreativeAgent[key].description = activityFormValue;
+    if (value) {
+      newCreativeAgent[key].description = value;
       await services.areaPlanClone.updateActivityAgent(
         setIsLoading,
         newCreativeAgent[key].id,
@@ -59,11 +59,10 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
           description: newCreativeAgent[key].description,
         }
       );
-      setActivityFormValue(null);
     }
 
     newCreativeAgent[key].form = !newCreativeAgent[key].form;
-    setCreativeAgent(newCreativeAgent);
+    setCreativeAgent(JSON.parse(JSON.stringify(newCreativeAgent)));
   };
 
   return (
@@ -99,18 +98,16 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
             </h3>
             <div className='bg-white shadow rounded-lg p-4'>
               <ul className='list-disc px-4'>
-                {plan.id
-                  ? plan.competences.length
-                    ? plan.competences.map((competence) => (
-                        <li>
-                          <span className='badge badge-primary badge-sm mr-2'>
-                            {competence.competence.subject.name}
-                          </span>
-                          {competence.competence.description}
-                        </li>
-                      ))
-                    : 'No se definieron competencias para esta planeación'
-                  : ''}
+                {plan.competences?.length
+                  ? plan.competences.map((competence) => (
+                      <li key={uuidv4()}>
+                        <span className='badge badge-primary badge-sm mr-2'>
+                          {competence.competence.subject.name}
+                        </span>
+                        {competence.competence.description}
+                      </li>
+                    ))
+                  : 'No se definieron competencias para esta planeación'}
               </ul>
             </div>
           </div>
@@ -120,21 +117,19 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
             </h3>
             <div className='bg-white shadow rounded-lg p-4'>
               <ul className='list-disc px-4'>
-                {plan.id
-                  ? plan.indicators.length
-                    ? plan.indicators.map((indicator) => (
-                        <li>
-                          <span className='badge badge-primary badge-sm mr-2'>
-                            {indicator.indicator.type}
-                          </span>
-                          <span className='badge badge-secondary badge-sm mr-2'>
-                            {indicator.indicator.subject.name}
-                          </span>
-                          {indicator.indicator.description}
-                        </li>
-                      ))
-                    : 'No se definieron competencias para esta planeación'
-                  : ''}
+                {plan.indicators?.length
+                  ? plan.indicators.map((indicator) => (
+                      <li key={uuidv4()}>
+                        <span className='badge badge-primary badge-sm mr-2'>
+                          {indicator.indicator.type}
+                        </span>
+                        <span className='badge badge-secondary badge-sm mr-2'>
+                          {indicator.indicator.subject.name}
+                        </span>
+                        {indicator.indicator.description}
+                      </li>
+                    ))
+                  : 'No se definieron competencias para esta planeación'}
               </ul>
             </div>
           </div>
@@ -145,13 +140,17 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
               Descargar
             </Link>
             <label
-              htmlFor='my-modal-4'
+              htmlFor='creative-agent'
               className='btn btn-primary px-4 py-2 !text-sm'
             >
               Agenda Creativa
             </label>
-            <input type='checkbox' id='my-modal-4' className='modal-toggle' />
-            <label htmlFor='my-modal-4' className='modal cursor-pointer'>
+            <input
+              type='checkbox'
+              id='creative-agent'
+              className='modal-toggle'
+            />
+            <label htmlFor='creative-agent' className='modal cursor-pointer'>
               <label className='modal-box relative' htmlFor=''>
                 <div className='flex flex-col gap-3 text-center items-center justify-center h-full'>
                   <svg
@@ -387,39 +386,47 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
                     <ul className='list-disc px-4'>
                       {creativeAgent.length
                         ? creativeAgent.map((activity, key) => (
-                            <li className='flex gap-4 items-center justify-between'>
+                            <li
+                              key={uuidv4()}
+                              className='flex gap-4 items-center justify-between'
+                            >
                               <span>{activity.title}</span>
-                              {!activity.form ? (
-                                <div className='flex gap-4 items-center justify-between'>
-                                  {activity.description}
-                                  <button
-                                    type='button'
-                                    onClick={() => updateFieldOnChange(key)}
-                                    className='flex items-center p-2 rounded-full text-sm bg-primary-300 hover:bg-primary-500 text-white shadow-lg'
-                                  >
-                                    <FontAwesomeIcon icon={faPencil} />
-                                  </button>
-                                </div>
-                              ) : (
+                              {activity.form ? (
                                 <div className='flex gap-4 items-center justify-between'>
                                   <input
                                     onInput={(e) => {
-                                      setActivityFormValue(e.target.value);
-                                      return true;
+                                      // eslint-disable-next-line no-param-reassign
+                                      activity.description = e.target.value;
+                                      e.preventDefault();
                                     }}
                                     defaultValue={activity.description}
                                     placeholder='descripción'
                                     className='block form-input !p-2'
                                   />
-                                  <button
-                                    type='button'
+                                  <a
+                                    href='#'
                                     onClick={() =>
-                                      updateFieldOnChange(key, true)
+                                      updateFieldOnChange(
+                                        key,
+                                        activity.description
+                                      )
                                     }
                                     className='flex items-center p-2 rounded-full text-sm bg-primary-300 hover:bg-primary-500 text-white shadow-lg'
                                   >
                                     <FontAwesomeIcon icon={faFloppyDisk} />
-                                  </button>
+                                  </a>
+                                </div>
+                              ) : (
+                                <div className='flex gap-4 items-center justify-between'>
+                                  {activity.description}
+                                  {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
+                                  <a
+                                    href='#'
+                                    onClick={() => updateFieldOnChange(key)}
+                                    className='flex items-center p-2 rounded-full text-sm bg-primary-300 hover:bg-primary-500 text-white shadow-lg'
+                                  >
+                                    <FontAwesomeIcon icon={faPencil} />
+                                  </a>
                                 </div>
                               )}
                             </li>
@@ -437,18 +444,16 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
                 Temas/Ejes/Contenidos
               </h3>
               <ul className='list-disc px-4'>
-                {plan.id
-                  ? plan.topics.length
-                    ? plan.topics.map((topic) => (
-                        <li>
-                          <span className='badge badge-primary badge-sm mr-2'>
-                            {topic.topic.subject.name}
-                          </span>
-                          {topic.topic.name}
-                        </li>
-                      ))
-                    : 'No se definieron competencias para esta planeación'
-                  : ''}
+                {plan.topics?.length
+                  ? plan.topics.map((topic) => (
+                      <li key={uuidv4()}>
+                        <span className='badge badge-primary badge-sm mr-2'>
+                          {topic.topic.subject.name}
+                        </span>
+                        {topic.topic.name}
+                      </li>
+                    ))
+                  : 'No se definieron competencias para esta planeación'}
               </ul>
             </div>
             <hr />
@@ -465,7 +470,10 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
               </h3>
               {activities.length
                 ? activities.map((activity, key) => (
-                    <div className='flex justify-between items-center'>
+                    <div
+                      key={uuidv4()}
+                      className='flex justify-between items-center'
+                    >
                       <div className='collapse w-full collapse-arrow text-sm capitalize'>
                         <input type='checkbox' className='peer' />
                         <div className='collapse-title text-gray-500 font-medium'>
@@ -494,7 +502,10 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
               </h3>
               {tasks.length
                 ? tasks.map((task, key) => (
-                    <div className='flex justify-between items-center'>
+                    <div
+                      key={uuidv4()}
+                      className='flex justify-between items-center'
+                    >
                       <div className='collapse w-full collapse-arrow text-sm capitalize'>
                         <input type='checkbox' className='peer' />
                         <div className='collapse-title text-gray-500 font-medium'>
@@ -521,56 +532,58 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
               <h3 className='text-gray-600 text-xl font-semibold mb-4'>
                 Anexos
               </h3>
-              {plan.id
-                ? !plan.annexes.length
-                  ? ''
-                  : plan.annexes.map((annexe) => (
-                      <div className='collapse collapse-arrow text-sm'>
-                        <input type='checkbox' className='peer' />
-                        <div className='collapse-title text-gray-500 font-medium capitalize'>
-                          {annexe.title}
-                        </div>
-                        <div className='collapse-content'>
-                          <p>
-                            {annexe.type === 'link' ? (
-                              <a
-                                className='link link-primary'
-                                href={annexe.value}
-                              >
-                                {annexe.value}
-                              </a>
-                            ) : (
-                              annexe.value
-                            )}
-                          </p>
-                        </div>
+              {!plan.annexes?.length
+                ? ''
+                : plan.annexes.map((annexe) => (
+                    <div
+                      key={uuidv4()}
+                      className='collapse collapse-arrow text-sm'
+                    >
+                      <input type='checkbox' className='peer' />
+                      <div className='collapse-title text-gray-500 font-medium capitalize'>
+                        {annexe.title}
                       </div>
-                    ))
-                : ''}
+                      <div className='collapse-content'>
+                        <p>
+                          {annexe.type === 'link' ? (
+                            <a
+                              className='link link-primary'
+                              href={annexe.value}
+                            >
+                              {annexe.value}
+                            </a>
+                          ) : (
+                            annexe.value
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
             </div>
             <hr />
             <div className='flex flex-col'>
               <h3 className='text-gray-600 text-xl font-semibold mb-4'>
                 Referencias
               </h3>
-              {plan.id
-                ? !plan.references.length
-                  ? ''
-                  : plan.references.map((reference) => (
-                      <div className='collapse collapse-arrow text-sm capitalize'>
-                        <input type='checkbox' className='peer' />
-                        <div className='collapse-title text-gray-500 font-medium'>
-                          {reference.title}
-                        </div>
-                        <div className='collapse-content'>
-                          <p>{reference.value}</p>
-                          <span className='text-xs text-gray-300'>
-                            - {reference.author}
-                          </span>
-                        </div>
+              {!plan.references?.length
+                ? ''
+                : plan.references.map((reference) => (
+                    <div
+                      key={uuidv4()}
+                      className='collapse collapse-arrow text-sm capitalize'
+                    >
+                      <input type='checkbox' className='peer' />
+                      <div className='collapse-title text-gray-500 font-medium'>
+                        {reference.title}
                       </div>
-                    ))
-                : ''}
+                      <div className='collapse-content'>
+                        <p>{reference.value}</p>
+                        <span className='text-xs text-gray-300'>
+                          - {reference.author}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
             </div>
             <hr />
             <div className='flex flex-col'>
@@ -580,7 +593,7 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
               <ul className='list-disc px-4'>
                 {plan.id
                   ? JSON.parse(plan.orientations).map((orientation) => (
-                      <li>{orientation}</li>
+                      <li key={uuidv4()}>{orientation}</li>
                     ))
                   : ''}
               </ul>
@@ -593,7 +606,7 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
               <ul className='list-disc px-4'>
                 {plan.id
                   ? JSON.parse(plan.adaptations).map((adaptation) => (
-                      <li>{adaptation}</li>
+                      <li key={uuidv4()}>{adaptation}</li>
                     ))
                   : ''}
               </ul>

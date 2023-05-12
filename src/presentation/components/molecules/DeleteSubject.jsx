@@ -269,7 +269,13 @@ export default function DeleteSubject({
               temas e indicadores de desempeño
             </span>
           </div>
-          <div className='flex items-end justify-end'>
+          <div className='flex items-end gap-3 justify-end'>
+            <a
+              href='#'
+              className='flex items-center py-2 px-4 rounded-lg text-sm bg-gray-100 shadow-lg cursor-pointer'
+            >
+              Cancelar
+            </a>
             <button
               type='button'
               onClick={() => deleteSubject()}

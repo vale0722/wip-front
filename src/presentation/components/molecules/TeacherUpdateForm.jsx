@@ -58,7 +58,7 @@ export default function TeacherUpdateForm({ setIsLoading }) {
                 Ingresa la información general del profesor a registrar
               </span>
             </div>
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid md:grid-cols-2 gap-4'>
               <div className='flex flex-col gap-2'>
                 <label className='text-md font-bold'>Nombre</label>
                 <input
@@ -125,7 +125,7 @@ export default function TeacherUpdateForm({ setIsLoading }) {
           </div>
         </div>
       </div>
-      <div className='flex items-end justify-end'>
+      <div className='flex items-end justify-end px-2 md:px-0'>
         <button
           type='button'
           onClick={submitForm}

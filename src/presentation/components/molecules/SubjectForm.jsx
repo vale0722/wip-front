@@ -92,10 +92,19 @@ export default function SubjectForm({ setIsLoading }) {
     setTransformStepsMethod(transformStepsMethod);
   }
 
+  function back() {
+    stepActive.completed = false;
+    if (stepActive.index !== 0) {
+      setStepActive(transformStepsMethod[stepActive.index - 1]);
+    }
+
+    setTransformStepsMethod(transformStepsMethod);
+  }
+
   return (
-    <div className='flex flex-col gap-6 py-10'>
+    <div className='flex flex-col gap-6 py-10 px-8 md:px-0'>
       <div className='flex justify-between items-start gap-6 relative'>
-        <div className='flex flex-col sticky bg-white gap-2 shadow p-8 rounded-lg flex flex-col items-start justify-between'>
+        <div className='hidden md:flex flex-col sticky bg-white gap-2 shadow p-8 rounded-lg flex flex-col items-start justify-between'>
           {transformStepsMethod.map((step, key) => (
             <Step
               key={uuidv4()}
@@ -114,23 +123,45 @@ export default function SubjectForm({ setIsLoading }) {
           })}
         </div>
       </div>
-      <div className='flex items-end justify-end'>
+      <div className='flex items-end justify-end gap-2'>
         {stepActive.index !== steps.length - 1 ? (
-          <button
-            type='button'
-            onClick={() => next()}
-            className='flex items-center py-2 px-4 rounded-lg text-sm bg-primary-500 text-white shadow-lg'
-          >
-            Siguiente
-          </button>
+          <>
+            {stepActive.index !== 0 ? (
+              <button
+                type='button'
+                onClick={() => back()}
+                className='flex items-center py-2 px-4 rounded-lg text-sm bg-primary-500 text-white shadow-lg'
+              >
+                Atrás
+              </button>
+            ) : (
+              ''
+            )}
+            <button
+              type='button'
+              onClick={() => next()}
+              className='flex items-center py-2 px-4 rounded-lg text-sm bg-primary-500 text-white shadow-lg'
+            >
+              Siguiente
+            </button>
+          </>
         ) : (
-          <button
-            type='button'
-            onClick={submitForm}
-            className='flex items-center py-2 px-4 rounded-lg text-sm bg-primary-500 text-white shadow-lg'
-          >
-            Finalizar
-          </button>
+          <>
+            <button
+              type='button'
+              onClick={() => back()}
+              className='flex items-center py-2 px-4 rounded-lg text-sm bg-primary-500 text-white shadow-lg'
+            >
+              Atrás
+            </button>
+            <button
+              type='button'
+              onClick={submitForm}
+              className='flex items-center py-2 px-4 rounded-lg text-sm bg-primary-500 text-white shadow-lg'
+            >
+              Finalizar
+            </button>
+          </>
         )}
       </div>
     </div>

@@ -21,31 +21,32 @@ import Competences from 'presentation/components/molecules/tabs/subjects/Compete
 import Objetives from 'presentation/components/molecules/tabs/subjects/Objetives';
 import Indicators from 'presentation/components/molecules/tabs/subjects/Indicators';
 import Topics from 'presentation/components/molecules/tabs/subjects/Topics';
+import DeleteSubject from 'presentation/components/molecules/DeleteSubject';
 
 export default function SubjectShowPage({ setIsLoading }) {
   const { area: areaId, grade: gradeId, subject: subjectId } = useParams();
 
   const refreshCompetences = () => {
     services.areaPlan
-      .getCompetences(setIsLoading, areaId)
+      .getCompetences(setIsLoading, areaId, subjectId)
       .then((data) => dispatch(getAreaCompetences(data)));
   };
 
   const refreshObjetives = () => {
     services.areaPlan
-      .getObjetives(setIsLoading, areaId)
+      .getObjetives(setIsLoading, areaId, subjectId)
       .then((data) => dispatch(getAreaObjetives(data)));
   };
 
   const refreshIndicators = () => {
     services.areaPlan
-      .getPerformanceIndicators(setIsLoading, areaId)
+      .getPerformanceIndicators(setIsLoading, areaId, subjectId)
       .then((data) => dispatch(getPerformanceIndicators(data)));
   };
 
   const refreshTopics = () => {
     services.areaPlan
-      .getTopics(setIsLoading, areaId)
+      .getTopics(setIsLoading, areaId, subjectId)
       .then((data) => dispatch(getAreaTopics(data)));
   };
 
@@ -102,9 +103,48 @@ export default function SubjectShowPage({ setIsLoading }) {
   }, [dispatch]);
 
   return (
-    <div className='flex flex-col h-full w-full items-center my-10'>
+    <div className='flex flex-col h-full w-full items-center'>
       <div className='w-full fixed h-full -z-10'>
         <Header height='h-full' />
+      </div>
+      <div className='z-8 mx-auto w-full px-8 bg-white sticky top-[65px] py-2'>
+        <div className='text-sm breadcrumbs capitalize'>
+          <ul>
+            <li>
+              <Link
+                to={config.routes.grades.show.path.replace(':grade', gradeId)}
+              >
+                {subjectActive.grade?.name}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${config.routes.grades.show.path.replace(
+                  ':grade',
+                  gradeId
+                )}${config.routes.grades.areas.show.path.replace(
+                  ':area',
+                  areaId
+                )}`}
+              >
+                {subjectActive.area?.name}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${config.routes.grades.show.path.replace(
+                  ':grade',
+                  gradeId
+                )}${config.routes.grades.areas.subjects.routes.show.path
+                  .replace(':area', areaId)
+                  .replace(':subject', subjectId)}`}
+                className='font-semibold'
+              >
+                {subjectActive.area?.name}
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
       <main className='py-2 bg-white bg-opacity-30 lg:grid lg:grid-cols-6 gap-6 my-12 w-full px-2 mx-auto'>
         <aside className='col-span-2 flex flex-col gap-6 mx-10 lg:mx-2 mb-2'>
@@ -175,36 +215,11 @@ export default function SubjectShowPage({ setIsLoading }) {
           </div>
         </aside>
         <article className='col-span-4 mx-10 gap-3'>
-          <div className='text-sm breadcrumbs capitalize'>
-            <ul>
-              <li>
-                <Link
-                  to={config.routes.grades.show.path.replace(':grade', gradeId)}
-                >
-                  {subjectActive.grade?.name}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`${config.routes.grades.show.path.replace(
-                    ':grade',
-                    gradeId
-                  )}${config.routes.grades.areas.show.path.replace(
-                    ':area',
-                    areaId
-                  )}`}
-                  className='font-semibold'
-                >
-                  {subjectActive.area?.name}
-                </Link>
-              </li>
-            </ul>
-          </div>
           <div className='bg-white shadow rounded-lg p-4 w-full'>
             <div className='tabs'>
               <button
                 type='button'
-                className={`tab tab-lifted ${
+                className={`tab tab-sm tab-lifted ${
                   tabActive.name === 'objetives' ? 'tab-active' : ''
                 }`}
                 onClick={() => setTabActive(COMPONENTS.objetives)}
@@ -213,7 +228,7 @@ export default function SubjectShowPage({ setIsLoading }) {
               </button>
               <button
                 type='button'
-                className={`tab tab-lifted ${
+                className={`tab tab-sm tab-lifted ${
                   tabActive.name === 'competences' ? 'tab-active' : ''
                 }`}
                 onClick={() => setTabActive(COMPONENTS.competences)}
@@ -222,7 +237,7 @@ export default function SubjectShowPage({ setIsLoading }) {
               </button>
               <button
                 type='button'
-                className={`tab tab-lifted ${
+                className={`tab tab-sm tab-lifted ${
                   tabActive.name === 'indicators' ? 'tab-active' : ''
                 }`}
                 onClick={() => setTabActive(COMPONENTS.indicators)}
@@ -231,7 +246,7 @@ export default function SubjectShowPage({ setIsLoading }) {
               </button>
               <button
                 type='button'
-                className={`tab tab-lifted ${
+                className={`tab tab-sm tab-lifted ${
                   tabActive.name === 'topics' ? 'tab-active' : ''
                 }`}
                 onClick={() => setTabActive(COMPONENTS.topics)}
@@ -245,6 +260,15 @@ export default function SubjectShowPage({ setIsLoading }) {
             })}
           </div>
         </article>
+        <DeleteSubject
+          setIsLoading={setIsLoading}
+          subjectId={subjectActive.id}
+          refresh={() =>
+            services.subjects.show(setIsLoading, subjectId).then((data) => {
+              dispatch(getSubject(data));
+            })
+          }
+        />
       </main>
     </div>
   );

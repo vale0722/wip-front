@@ -25,7 +25,7 @@ export default function Indicator({ setSelected, clear }) {
         <label className='text-xs font-bold'>Tipo</label>
         <select
           className='block form-input !p-2'
-          defaultValue={indicator.type}
+          defaultValue={indicator.type ?? 'default'}
           onInput={(event) => {
             indicator.type = event.target.value;
             indicator.label = `${indicator.type}: ${indicator.description}`;

@@ -42,9 +42,34 @@ export default function AreaShowPage({ setIsLoading }) {
   }, [dispatch]);
 
   return (
-    <div className='flex flex-col h-full w-full items-center my-10'>
-      <div className='w-full fixed h-full -z-10'>
-        <Header height='h-full' />
+    <div className='flex flex-col h-full w-full items-center'>
+      <Header height='h-full' />
+      <div className='z-8 mx-auto w-full px-8 bg-white sticky top-[65px] py-2'>
+        <div className='text-sm breadcrumbs capitalize'>
+          <ul>
+            <li>
+              <Link
+                to={config.routes.grades.show.path.replace(':grade', gradeId)}
+              >
+                {areaActive.id ? areaActive.grade.name : ''}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${config.routes.grades.show.path.replace(
+                  ':grade',
+                  gradeId
+                )}${config.routes.grades.areas.show.path.replace(
+                  ':area',
+                  areaActive.id
+                )}`}
+                className='font-semibold'
+              >
+                {areaActive.name}
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
       <main className='py-2 bg-white bg-opacity-30 lg:grid lg:grid-cols-6 gap-6 my-12 w-full px-2 mx-auto'>
         <aside className='col-span-2 flex flex-col gap-6 mx-10 lg:mx-2 mb-2'>
@@ -163,31 +188,6 @@ export default function AreaShowPage({ setIsLoading }) {
           </Link>
         </aside>
         <article className='col-span-4 mx-10 gap-3'>
-          <div className='text-sm breadcrumbs capitalize'>
-            <ul>
-              <li>
-                <Link
-                  to={config.routes.grades.show.path.replace(':grade', gradeId)}
-                >
-                  {areaActive.id ? areaActive.grade.name : ''}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to={`${config.routes.grades.show.path.replace(
-                    ':grade',
-                    gradeId
-                  )}${config.routes.grades.areas.show.path.replace(
-                    ':area',
-                    areaActive.id
-                  )}`}
-                  className='font-semibold'
-                >
-                  {areaActive.name}
-                </Link>
-              </li>
-            </ul>
-          </div>
           <h3 className='text-gray-700 text-2xl font-bold mb-4'>Blog</h3>
           <form className='bg-white shadow rounded-lg mb-6 p-4'>
             <textarea

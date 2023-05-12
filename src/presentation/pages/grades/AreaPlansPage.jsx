@@ -1,18 +1,14 @@
 import React, { useEffect } from 'react';
 import Header from 'presentation/components/atoms/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faAngleRight,
-  faEllipsisV,
-  faEye,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAreaPlans } from 'domain/reducers/area_plan.reducer';
 import { getArea } from 'domain/reducers/area.reducer';
 import services from 'domain/services';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function AreaPlansPage({ setIsLoading }) {
   const areaActive = useSelector((state) => state.area.value);
@@ -42,39 +38,45 @@ export default function AreaPlansPage({ setIsLoading }) {
 
   return (
     <div className='flex flex-col h-full w-full items-center'>
-      <Header height='h-32' />
-      <div className='container flex flex-col h-full w-full my-4'>
-        <div className='flex gap-3 text-sm'>
-          <Link to={config.routes.grades.show.path.replace(':grade', gradeId)}>
-            {areaActive.id ? areaActive.grade.name : ''}
-          </Link>
-          <span>
-            <FontAwesomeIcon icon={faAngleRight} />
-          </span>
-          <Link
-            to={`${
-              config.routes.grades.show.path.replace(':grade', gradeId) +
-              config.routes.grades.areas.show.path.replace(
-                ':area',
-                areaActive.id
-              )
-            }`}
-          >
-            {areaActive.name}
-          </Link>
-          <span>
-            <FontAwesomeIcon icon={faAngleRight} />
-          </span>
-          <Link
-            to={`${
-              config.routes.grades.show.path.replace(':grade', gradeId) +
-              config.routes.grades.areas.plans.path.replace(':area', areaId)
-            }`}
-            className='font-semibold'
-          >
-            Planes de clase
-          </Link>
+      <Header height='h-full' />
+      <div className='z-8 mx-auto w-full px-8 bg-white sticky top-[65px] py-2'>
+        <div className='text-sm breadcrumbs capitalize'>
+          <ul>
+            <li>
+              <Link
+                to={config.routes.grades.show.path.replace(':grade', gradeId)}
+              >
+                {areaActive.id ? areaActive.grade.name : ''}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${
+                  config.routes.grades.show.path.replace(':grade', gradeId) +
+                  config.routes.grades.areas.show.path.replace(
+                    ':area',
+                    areaActive.id
+                  )
+                }`}
+              >
+                {areaActive.name}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${
+                  config.routes.grades.show.path.replace(':grade', gradeId) +
+                  config.routes.grades.areas.plans.path.replace(':area', areaId)
+                }`}
+                className='font-semibold'
+              >
+                Planes de clase
+              </Link>
+            </li>
+          </ul>
         </div>
+      </div>
+      <div className='container flex flex-col h-full w-full my-4'>
         <span className='text-2xl font-semibold py-6'>
           Gestión de planes de clase: {areaActive.name}
         </span>
@@ -127,16 +129,28 @@ export default function AreaPlansPage({ setIsLoading }) {
             <tbody>
               {plans.length ? (
                 plans.map((plan) => (
-                  <tr key={plan.id}>
+                  <tr key={uuidv4()}>
                     <td className='w-48 flex'>
                       <div className='font-bold text-ellipsis overflow-hidden'>
                         {plan.name}
                       </div>
                     </td>
-                    <td>{plan.status}</td>
+                    <td>
+                      {plan.status === 'ACTIVE' ? (
+                        <span className='badge badge-success badge-outline'>
+                          Activado
+                        </span>
+                      ) : plan.status === 'COMPLETED' ? (
+                        <span className='badge badge-outline'>Completado</span>
+                      ) : (
+                        <span className='badge badge-warning badge-outline'>
+                          Pendiente
+                        </span>
+                      )}
+                    </td>
                     <td>{plan.startDate}</td>
                     <td>{plan.endDate}</td>
-                    <td>{plan.author}</td>
+                    <td className='capitalize'>{plan.author}</td>
                     <th>
                       <div className='dropdown dropdown-hover dropdown-left'>
                         <label
@@ -173,7 +187,7 @@ export default function AreaPlansPage({ setIsLoading }) {
                 ))
               ) : (
                 <tr>
-                  <th>{plans.length}</th>{' '}
+                  <th>{plans.length}</th>
                 </tr>
               )}
             </tbody>

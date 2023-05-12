@@ -41,11 +41,15 @@ async function index(setIsLoading, grade, area) {
   }
 }
 
-async function getCompetences(setIsLoading, area) {
+async function getCompetences(setIsLoading, area, subject) {
   setIsLoading(true);
 
   try {
-    const response = await service.get(`/api/area-plan/${area}/competences`);
+    const response = await service.get(`/api/area-plan/${area}/competences`, {
+      params: {
+        subject_id: subject,
+      },
+    });
     setIsLoading(false);
     return response.data.data ?? {};
   } catch (error) {
@@ -54,11 +58,15 @@ async function getCompetences(setIsLoading, area) {
   }
 }
 
-async function getTopics(setIsLoading, area) {
+async function getTopics(setIsLoading, area, subject) {
   setIsLoading(true);
 
   try {
-    const response = await service.get(`/api/area-plan/${area}/topics`);
+    const response = await service.get(`/api/area-plan/${area}/topics`, {
+      params: {
+        subject_id: subject,
+      },
+    });
     setIsLoading(false);
     return response.data.data ?? {};
   } catch (error) {
@@ -67,11 +75,15 @@ async function getTopics(setIsLoading, area) {
   }
 }
 
-async function getPerformanceIndicators(setIsLoading, area) {
+async function getPerformanceIndicators(setIsLoading, area, subject) {
   setIsLoading(true);
 
   try {
-    const response = await service.get(`/api/area-plan/${area}/indicators`);
+    const response = await service.get(`/api/area-plan/${area}/indicators`, {
+      params: {
+        subject_id: subject,
+      },
+    });
     setIsLoading(false);
     return response.data.data ?? {};
   } catch (error) {
@@ -80,11 +92,15 @@ async function getPerformanceIndicators(setIsLoading, area) {
   }
 }
 
-async function getObjetives(setIsLoading, area) {
+async function getObjetives(setIsLoading, area, subject) {
   setIsLoading(true);
 
   try {
-    const response = await service.get(`/api/area-plan/${area}/objetives`);
+    const response = await service.get(`/api/area-plan/${area}/objetives`, {
+      params: {
+        subject_id: subject,
+      },
+    });
     setIsLoading(false);
     return response.data.data ?? {};
   } catch (error) {

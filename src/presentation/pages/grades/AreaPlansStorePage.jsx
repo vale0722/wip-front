@@ -33,9 +33,9 @@ export default function AreaPlansStorePage({ setIsLoading }) {
   }, [dispatch]);
 
   return (
-    <div className='flex flex-col w-full items-center'>
-      <Header height='h-32' />
-      <div className='container flex flex-col h-full w-full my-4'>
+    <div className='flex flex-col w-full items-center relative'>
+      <Header height='h-full' />
+      <div className='z-8 mx-auto w-full px-8 bg-white sticky top-[65px] py-2'>
         <div className='text-sm breadcrumbs capitalize'>
           <ul>
             <li>
@@ -87,6 +87,8 @@ export default function AreaPlansStorePage({ setIsLoading }) {
             </li>
           </ul>
         </div>
+      </div>
+      <div className='container flex flex-col h-full w-full my-4'>
         <span className='text-2xl font-semibold py-6'>
           Crear Plan de Area: {areaActive.name}
         </span>

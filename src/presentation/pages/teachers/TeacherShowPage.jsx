@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react';
 import Header from 'presentation/components/atoms/Header';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faAngleRight,
-  faEllipsisV,
-  faEye,
-  faTrash,
-} from '@fortawesome/free-solid-svg-icons';
+import { faEllipsisV, faEye, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { Link, useParams } from 'react-router-dom';
 import config from 'domain/config';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,29 +28,34 @@ export default function TeacherShowPage({ setIsLoading }) {
   return (
     <div className='flex flex-col h-full w-full'>
       <Header height='h-full' />
-      <div className='flex gap-3 text-sm capitalize m-10 mb-0'>
-        <Link to={`${config.routes.auth.teachers.path}`}>Profesores</Link>
-        <span>
-          <FontAwesomeIcon icon={faAngleRight} />
-        </span>
-        <Link
-          to={`${config.routes.teachers.show.path.replace(
-            ':teacher',
-            teacherId
-          )}`}
-          className='font-semibold'
-        >
-          {teacher.id ? teacher.name : ''}
-        </Link>
+      <div className='z-8 mx-auto w-full px-8 bg-white sticky top-[65px] py-2'>
+        <div className='text-sm breadcrumbs capitalize'>
+          <ul>
+            <li>
+              <Link to={`${config.routes.auth.teachers.path}`}>Profesores</Link>
+            </li>
+            <li>
+              <Link
+                to={`${config.routes.teachers.show.path.replace(
+                  ':teacher',
+                  teacherId
+                )}`}
+                className='font-semibold'
+              >
+                {teacher.id ? teacher.name : ''}
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
       {teacher.id ? (
-        <main className='py-2 bg-white bg-opacity-30 grid grid-cols-1 lg:grid-cols-6 gap-6 m-8 w-3xl px-2'>
-          <aside className='col-span-2 flex flex-col gap-6'>
-            <div className='bg-white shadow rounded-lg p-4'>
+        <main className='py-2 grid grid-cols-1 lg:grid-cols-6 gap-6 m-8 w-3xl px-2'>
+          <aside className='col-span-1 lg:col-span-2 flex flex-col gap-6'>
+            <div className='bg-white shadow rounded-lg p-4 z-[-1]'>
               <div className='flex flex-col gap-4 text-center items-center'>
                 <label
                   tabIndex='0'
-                  className='w-32 h-32 btn btn-ghost btn-circle avatar'
+                  className='w-32 h-32 btn btn-ghost btn-circle avatar z-1'
                 >
                   <div className='w-28 rounded-full'>
                     <img
@@ -98,7 +98,7 @@ export default function TeacherShowPage({ setIsLoading }) {
               <h3 className='text-gray-600 text-xl font-semibold mb-4'>
                 Seguimientos
               </h3>
-              <div className='h-full w-full'>
+              <div className='overflow-x-auto h-full w-full'>
                 <table className='table w-full'>
                   <thead>
                     <tr>
@@ -112,7 +112,7 @@ export default function TeacherShowPage({ setIsLoading }) {
                     {teacher.id && teacher.plans.length
                       ? teacher.plans.map((son) => (
                           <tr key={son.id}>
-                            <td>
+                            <th>
                               <Link
                                 title={son.id}
                                 className='block font-bold transition ease-in duration-200 hover:scale-105 h-full w-full cursor-pointer'
@@ -120,7 +120,7 @@ export default function TeacherShowPage({ setIsLoading }) {
                               >
                                 {son.name}
                               </Link>
-                            </td>
+                            </th>
                             <td>{son.createdAt}</td>
                             <td>{son.updatedAt}</td>
                             <td>

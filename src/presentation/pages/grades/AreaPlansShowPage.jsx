@@ -33,55 +33,57 @@ export default function AreaPlansShowPage({ setIsLoading }) {
   return (
     <div className='flex flex-col h-full w-full'>
       <Header height='h-full' />
-      <div className='text-sm breadcrumbs capitalize'>
-        <ul>
-          <li>
-            <Link
-              to={config.routes.grades.show.path.replace(':grade', gradeId)}
-            >
-              {plan.id ? plan.area.grade.name : ''}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`${config.routes.grades.show.path.replace(
-                ':grade',
-                gradeId
-              )}${config.routes.grades.areas.show.path.replace(
-                ':area',
-                areaId
-              )}`}
-            >
-              {plan.id ? plan.area.name : ''}
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`${config.routes.grades.show.path.replace(
-                ':grade',
-                gradeId
-              )}${config.routes.grades.areas.plans.path.replace(
-                ':area',
-                areaId
-              )}`}
-            >
-              Planes de clase
-            </Link>
-          </li>
-          <li>
-            <Link
-              to={`${
-                config.routes.grades.show.path.replace(':grade', gradeId) +
-                config.routes.grades.areas.plans.routes.show.path
-                  .replace(':area', areaId)
-                  .replace(':show', plan.id)
-              }`}
-              className='font-semibold'
-            >
-              {plan.id ? plan.name : ''}
-            </Link>
-          </li>
-        </ul>
+      <div className='z-8 mx-auto w-full px-8 bg-white sticky top-[65px] py-2'>
+        <div className='text-sm breadcrumbs capitalize'>
+          <ul>
+            <li>
+              <Link
+                to={config.routes.grades.show.path.replace(':grade', gradeId)}
+              >
+                {plan.id ? plan.area.grade.name : ''}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${config.routes.grades.show.path.replace(
+                  ':grade',
+                  gradeId
+                )}${config.routes.grades.areas.show.path.replace(
+                  ':area',
+                  areaId
+                )}`}
+              >
+                {plan.id ? plan.area.name : ''}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${config.routes.grades.show.path.replace(
+                  ':grade',
+                  gradeId
+                )}${config.routes.grades.areas.plans.path.replace(
+                  ':area',
+                  areaId
+                )}`}
+              >
+                Planes de clase
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`${
+                  config.routes.grades.show.path.replace(':grade', gradeId) +
+                  config.routes.grades.areas.plans.routes.show.path
+                    .replace(':area', areaId)
+                    .replace(':show', plan.id)
+                }`}
+                className='font-semibold'
+              >
+                {plan.id ? plan.name : ''}
+              </Link>
+            </li>
+          </ul>
+        </div>
       </div>
       <main className='py-2 bg-white bg-opacity-30 grid grid-cols-1 lg:grid-cols-6 gap-6 my-8 w-3xl px-2 mx-auto'>
         <aside className='col-span-2 flex flex-col gap-6'>
@@ -462,7 +464,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
               {plan.question}
             </div>
             <hr />
-            <div className='flex flex-col'>
+            <div className='flex flex-col z-1'>
               <h3 className='text-gray-600 text-xl font-semibold mb-4'>
                 Actividades
               </h3>
@@ -472,7 +474,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                   : plan.activities.map((activity) => (
                       <div
                         key={uuidv4()}
-                        className='collapse collapse-arrow text-sm capitalize'
+                        className='collapse collapse-arrow text-sm capitalize block'
                       >
                         <input type='checkbox' className='peer' />
                         <div className='collapse-title text-gray-500 font-medium'>

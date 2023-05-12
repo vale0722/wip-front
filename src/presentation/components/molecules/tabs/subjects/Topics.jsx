@@ -27,7 +27,7 @@ export default function Topics({ setIsLoading, refresh }) {
         </a>
       </div>
       <div className='flex flex-col h-full w-full gap-2 py-2 overflow-y-scroll contents'>
-        <div className='overflow-x-auto h-full w-full contents'>
+        <div className='overflow-x-auto h-full w-full'>
           <table className='table w-full'>
             <thead>
               <tr>

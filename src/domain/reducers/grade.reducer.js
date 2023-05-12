@@ -27,8 +27,7 @@ export const gradesSlice = createSlice({
 });
 
 export const { getGrades } = gradesSlice.actions;
-export const { getGrade} =
-  gradeSlice.actions;
+export const { getGrade } = gradeSlice.actions;
 
 export const grades = gradesSlice.reducer;
 export const grade = gradeSlice.reducer;

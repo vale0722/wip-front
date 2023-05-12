@@ -20,8 +20,8 @@ export default function SubjectStorePage({ setIsLoading }) {
 
   return (
     <div className='flex flex-col w-full items-center'>
-      <Header height='h-32' />
-      <div className='container flex flex-col h-full w-full my-4'>
+      <Header height='h-full' />
+      <div className='z-8 mx-auto w-full px-8 bg-white sticky top-[65px] py-2'>
         <div className='text-sm breadcrumbs capitalize'>
           <ul>
             <li>
@@ -60,7 +60,9 @@ export default function SubjectStorePage({ setIsLoading }) {
             </li>
           </ul>
         </div>
-        <span className='text-2xl font-semibold py-6'>
+      </div>
+      <div className='container flex flex-col h-full w-full my-4'>
+        <span className='text-2xl font-semibold py-2 px-8 md:px-0'>
           Crear Asignatura: {areaActive.name}
         </span>
         <SubjectForm setIsLoading={setIsLoading} />
