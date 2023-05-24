@@ -1,0 +1,7 @@
+{
+    "version": 2,
+    "env": {
+        "REACT_APP_STATICS": "http://do-and-share-statics.s3-website-us-east-1.amazonaws.com/",
+        "REACT_APP_NAME": "Do & Share - Academic"
+    }
+}
