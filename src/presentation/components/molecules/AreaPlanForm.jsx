@@ -46,7 +46,7 @@ export default function AreaPlanForm({ setIsLoading }) {
       areaPlanDataForm
     );
 
-    if (response) {
+    if (response?.id) {
       window.location.href =
         config.routes.grades.show.path.replace(':grade', gradeId) +
         config.routes.grades.areas.plans.routes.show.path
@@ -55,7 +55,7 @@ export default function AreaPlanForm({ setIsLoading }) {
       return;
     }
 
-    alert('error');
+    alert(JSON.stringify(Object.values(response.errors)));
   };
 
   const [stepActive, setStepActive] = useState(steps[0]);

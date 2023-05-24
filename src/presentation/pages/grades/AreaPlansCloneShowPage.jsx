@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import Header from 'presentation/components/atoms/Header';
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAreaPlanClone } from 'domain/reducers/area_plan_clone.reducer';
 import services from 'domain/services';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFloppyDisk, faPencil } from '@fortawesome/free-solid-svg-icons';
 import { v4 as uuidv4 } from 'uuid';
+import service from 'domain/services/service';
+import FileDownload from 'js-file-download';
+import config from 'domain/config';
 
 export default function AreaPlansCloneShowPage({ setIsLoading }) {
   const plan = useSelector((state) => state.areaPlanClone.value);
@@ -63,6 +66,16 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
 
     newCreativeAgent[key].form = !newCreativeAgent[key].form;
     setCreativeAgent(JSON.parse(JSON.stringify(newCreativeAgent)));
+  };
+
+  const download = (route, extension) => {
+    service
+      .get(route, {
+        responseType: 'blob',
+      })
+      .then((response) => {
+        FileDownload(response.data, plan.name + extension);
+      });
   };
 
   return (
@@ -136,9 +149,45 @@ export default function AreaPlansCloneShowPage({ setIsLoading }) {
         </aside>
         <article className='col-span-4 mx-10 gap-3'>
           <div className='flex gap-3 justify-end mb-3'>
-            <Link className='btn btn-primary px-4 py-2 !text-sm' to='/'>
-              Descargar
-            </Link>
+            <div className='dropdown dropdown-hover dropdown-end'>
+              <label
+                tabIndex='0'
+                className='btn btn-primary px-4 py-2 !text-sm'
+              >
+                Descargar
+              </label>
+              <ul
+                tabIndex='0'
+                className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52'
+              >
+                <li>
+                  <button
+                    type='button'
+                    onClick={() =>
+                      download(
+                        `${config.api_url}api/exportclonepdf/${cloneId}`,
+                        '.pdf'
+                      )
+                    }
+                  >
+                    pdf
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type='button'
+                    onClick={() =>
+                      download(
+                        `${config.api_url}api/exportclonedocx/${cloneId}`,
+                        '.docx'
+                      )
+                    }
+                  >
+                    word
+                  </button>
+                </li>
+              </ul>
+            </div>
             <label
               htmlFor='creative-agent'
               className='btn btn-primary px-4 py-2 !text-sm'

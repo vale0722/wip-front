@@ -20,7 +20,7 @@ export default function Indicator({ setSelected, clear }) {
   }, [clear]);
 
   return (
-    <div className='flex gap-4 w-full'>
+    <div className='flex flex-col gap-4 w-full'>
       <div className='flex flex-col gap-2'>
         <label className='text-xs font-bold'>Tipo</label>
         <select
@@ -48,7 +48,7 @@ export default function Indicator({ setSelected, clear }) {
       </div>
       <div className='flex flex-col gap-2'>
         <label className='text-xs font-bold'>Descripción</label>
-        <input
+        <textarea
           onInput={(event) => {
             indicator.description = event.target.value;
             indicator.label = `${indicator.type}: ${indicator.description}`;
@@ -59,6 +59,7 @@ export default function Indicator({ setSelected, clear }) {
             };
             setSelected(data);
           }}
+          placeholder='Ingresa una descripción para el indicador de desempeño'
           className='block form-input !p-2'
         />
       </div>

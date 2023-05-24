@@ -6,11 +6,10 @@ import Objetives from 'presentation/components/molecules/steps/subjects/Objetive
 import Content from 'presentation/components/molecules/steps/subjects/Content';
 import Competences from 'presentation/components/molecules/steps/subjects/Competences';
 import Indicators from 'presentation/components/molecules/steps/subjects/Indicators';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import service from 'domain/services';
 import { useParams } from 'react-router-dom';
 import config from 'domain/config';
-import { setArea } from 'domain/reducers/subject_form.reducer';
 
 export default function SubjectForm({ setIsLoading }) {
   const steps = [
@@ -47,8 +46,6 @@ export default function SubjectForm({ setIsLoading }) {
 
   const subjectDataForm = useSelector((state) => state.subjectDataForm.value);
   const { area: areaId, grade: gradeId } = useParams();
-  const dispatch = useDispatch();
-  dispatch(setArea(areaId));
 
   const submitForm = async () => {
     const response = await service.subjects.store(
@@ -57,14 +54,14 @@ export default function SubjectForm({ setIsLoading }) {
       subjectDataForm
     );
 
-    if (response) {
+    if (response?.id) {
       window.location.href =
         config.routes.grades.show.path.replace(':grade', gradeId) +
         config.routes.grades.areas.show.path.replace(':area', areaId);
       return;
     }
 
-    alert('error');
+    alert(JSON.stringify(Object.values(response.errors)));
   };
 
   const [stepActive, setStepActive] = useState(steps[0]);

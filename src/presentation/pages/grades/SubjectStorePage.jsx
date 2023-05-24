@@ -6,12 +6,15 @@ import config from 'domain/config';
 import { useDispatch, useSelector } from 'react-redux';
 import { getArea } from 'domain/reducers/area.reducer';
 import services from 'domain/services';
+import { setArea } from 'domain/reducers/subject_form.reducer';
 
 export default function SubjectStorePage({ setIsLoading }) {
   const { area: areaId, grade: gradeId } = useParams();
   const areaActive = useSelector((state) => state.area.value);
 
   const dispatch = useDispatch();
+  dispatch(setArea(areaId));
+
   useEffect(() => {
     services.area
       .show(setIsLoading, areaId)

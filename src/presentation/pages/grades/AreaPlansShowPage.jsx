@@ -5,7 +5,9 @@ import config from 'domain/config';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAreaPlan } from 'domain/reducers/area_plan.reducer';
 import services from 'domain/services';
+import service from 'domain/services/service';
 import { v4 as uuidv4 } from 'uuid';
+import FileDownload from 'js-file-download';
 
 export default function AreaPlansShowPage({ setIsLoading }) {
   const plan = useSelector((state) => state.areaPlan.value);
@@ -21,6 +23,16 @@ export default function AreaPlansShowPage({ setIsLoading }) {
   const clone = async () => {
     await services.area.clone(setIsLoading, planId);
     window.location.reload();
+  };
+
+  const download = (route, extension) => {
+    service
+      .get(route, {
+        responseType: 'blob',
+      })
+      .then((response) => {
+        FileDownload(response.data, plan.name + extension);
+      });
   };
 
   const getShowCloneRoute = (id) =>
@@ -85,7 +97,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
           </ul>
         </div>
       </div>
-      <main className='py-2 bg-white bg-opacity-30 grid grid-cols-1 lg:grid-cols-6 gap-6 my-8 w-3xl px-2 mx-auto'>
+      <main className='py-2 z-2 bg-white bg-opacity-30 grid grid-cols-1 lg:grid-cols-6 gap-6 my-8 w-3xl px-2 mx-auto'>
         <aside className='col-span-2 flex flex-col gap-6'>
           <div className='bg-white shadow rounded-lg p-4'>
             <div className='flex flex-col gap-3 text-center items-center'>
@@ -169,10 +181,46 @@ export default function AreaPlansShowPage({ setIsLoading }) {
           </div>
         </aside>
         <article className='col-span-4 mx-10 gap-3'>
-          <div className='flex gap-3 justify-end mb-3'>
-            <Link className='btn btn-primary px-4 py-2 !text-sm' to='/'>
-              Descargar
-            </Link>
+          <div className='flex gap-3 justify-end mb-3 relative z-1'>
+            <div className='dropdown dropdown-hover dropdown-end'>
+              <label
+                tabIndex='0'
+                className='btn btn-primary px-4 py-2 !text-sm'
+              >
+                Descargar
+              </label>
+              <ul
+                tabIndex='0'
+                className='dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52'
+              >
+                <li>
+                  <button
+                    type='button'
+                    onClick={() =>
+                      download(
+                        `${config.api_url}api/exportpdf/${planId}`,
+                        '.pdf'
+                      )
+                    }
+                  >
+                    pdf
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type='button'
+                    onClick={() =>
+                      download(
+                        `${config.api_url}api/exportdocx/${planId}`,
+                        '.docx'
+                      )
+                    }
+                  >
+                    word
+                  </button>
+                </li>
+              </ul>
+            </div>
             <button
               type='button'
               onClick={clone}
@@ -474,7 +522,7 @@ export default function AreaPlansShowPage({ setIsLoading }) {
                   : plan.activities.map((activity) => (
                       <div
                         key={uuidv4()}
-                        className='collapse collapse-arrow text-sm capitalize block'
+                        className='collapse collapse-arrow text-sm capitalize'
                       >
                         <input type='checkbox' className='peer' />
                         <div className='collapse-title text-gray-500 font-medium'>

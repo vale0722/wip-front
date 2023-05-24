@@ -22,7 +22,9 @@ async function store(setIsLoading, grade, data) {
     return response.data.status.status === 'OK' ? response.data.data : null;
   } catch (error) {
     setIsLoading(false);
-    return {};
+    return {
+      errors: error.response.data.errors,
+    };
   }
 }
 
